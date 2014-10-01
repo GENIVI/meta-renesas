@@ -12,6 +12,9 @@ ARM_KEEP_OABI ?= "1"
 # Quirk for udev greater or equal 141
 UDEV_GE_141 ?= "1"
 
+# Enable cgroups support for systemd
+KERNEL_ENABLE_CGROUPS ?= "1"
+
 # Set the verbosity of kernel messages during runtime
 # You can define CMDLINE_DEBUG in your local.conf or distro.conf to override this behaviour
 CMDLINE_DEBUG ?= '${@base_conditional("DISTRO_TYPE", "release", "quiet", "debug", d)}'
@@ -114,6 +117,15 @@ do_configure_prepend() {
 
     # Activate CONFIG_LEGACY_PTYS
     kernel_configure_variable LEGACY_PTYS y
+
+    # needed for ttySC6 login on koelsch with systemd
+    kernel_configure_variable FHANDLE y
+
+    # additional configs needed for Genivi compliance
+    kernel_configure_variable EXPERIMENTAL y
+    kernel_configure_variable ECRYPT_FS y
+    kernel_configure_variable QUOTA y
+    kernel_configure_variable BT y
 
     # Keep this the last line
     # Remove all modified configs and add the rest to .config
