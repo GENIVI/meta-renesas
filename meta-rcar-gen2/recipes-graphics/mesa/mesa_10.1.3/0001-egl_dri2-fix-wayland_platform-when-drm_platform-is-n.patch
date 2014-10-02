@@ -1,0 +1,61 @@
+From 6638c55838b8f5186166b7855fdaf41e0a015e88 Mon Sep 17 00:00:00 2001
+From: Emil Velikov <emil.l.velikov@gmail.com>
+Date: Wed, 28 May 2014 14:36:46 +0100
+Subject: [PATCH] egl_dri2: fix wayland_platform when drm_platform is not set
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+The build fails with implicit delaration of drmGetCap (xf86drm.h)
+Were we're including the header only when building the DRM_PLATFORM.
+
+Wayland backend can operate without DRM_PLATFORM so replace the
+guard, and fold in drmGetCap() usage to silence compiler warnings.
+
+Cc: Chad Versace <chad.versace@linux.intel.com>
+Cc: Kristian Høgsberg <krh@bitplanet.net>
+Signed-off-by: Emil Velikov <emil.l.velikov@gmail.com>
+---
+ src/egl/drivers/dri2/egl_dri2.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/src/egl/drivers/dri2/egl_dri2.c b/src/egl/drivers/dri2/egl_dri2.c
+index f7f2da2..c1497b8 100644
+--- a/src/egl/drivers/dri2/egl_dri2.c
++++ b/src/egl/drivers/dri2/egl_dri2.c
+@@ -35,7 +35,7 @@
+ #include <fcntl.h>
+ #include <errno.h>
+ #include <unistd.h>
+-#ifdef HAVE_DRM_PLATFORM
++#ifdef HAVE_LIBDRM
+ #include <xf86drm.h>
+ #include <drm_fourcc.h>
+ #endif
+@@ -2001,7 +2001,7 @@ dri2_bind_wayland_display_wl(_EGLDriver *drv, _EGLDisplay *disp,
+			     struct wl_display *wl_dpy)
+ {
+    struct dri2_egl_display *dri2_dpy = dri2_egl_display(disp);
+-   int ret, flags = 0;
++   int flags = 0;
+    uint64_t cap;
+
+    (void) drv;
+@@ -2012,11 +2012,13 @@ dri2_bind_wayland_display_wl(_EGLDriver *drv, _EGLDisplay *disp,
+    wl_drm_callbacks.authenticate =
+       (int(*)(void *, uint32_t)) dri2_dpy->vtbl->authenticate;
+
+-   ret = drmGetCap(dri2_dpy->fd, DRM_CAP_PRIME, &cap);
+-   if (ret == 0 && cap == (DRM_PRIME_CAP_IMPORT | DRM_PRIME_CAP_EXPORT) &&
++#ifdef HAVE_LIBDRM
++   if (drmGetCap(dri2_dpy->fd, DRM_CAP_PRIME, &cap) == 0 &&
++       cap == (DRM_PRIME_CAP_IMPORT | DRM_PRIME_CAP_EXPORT) &&
+        dri2_dpy->image->base.version >= 7 &&
+        dri2_dpy->image->createImageFromFds != NULL)
+       flags |= WAYLAND_DRM_PRIME;
++#endif
+
+    dri2_dpy->wl_server_drm =
+	   wayland_drm_init(wl_dpy, dri2_dpy->device_name,
+--
+1.9.1

@@ -2,6 +2,9 @@
 PACKAGECONFIG[gles] = "--enable-gles1 --disable-gles2"
 PACKAGECONFIG[egl] = "--enable-egl --with-egl-platforms=wayland"
 
+FILESEXTRAPATHS_append := ":${THISDIR}/mesa_10.1.3/"
+SRC_URI += "file://0001-egl_dri2-fix-wayland_platform-when-drm_platform-is-n.patch"
+
 # Disable the gbm modules of mesa
 EXTRA_OECONF_rcar-gen2 := "${@'${EXTRA_OECONF}'.replace('--enable-gbm', '--disable-gbm')}"
 # Remove the gbm and egl packages. These are provided in other recipes.
