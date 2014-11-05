@@ -1,0 +1,80 @@
+Proprietary libraries for meta-rcar-gen2
+========================================
+
+The meta-rcar-gen2 of meta-renesas is supported GLES(RGX and SGX) libraires
+for x11 and Weston, and proprietary library of multimedia. This README describes
+how to use these featuresthe and setting to local.conf.
+
+In addition, these binaries are not provided at the recipes. If you want to use,
+you will need get from Renesas.
+
+Board configuration
+==================
+* Please add this line to local.conf depending on your board
+  1. For Lager board
+       MACHINE ??= "lager" 
+  2. For Koelsch board
+       MACHINE ??= "koelsch" 
+  3. For Gose board
+       MACHINE ??= "gose" 
+  4. For Alt board
+       MACHINE ??= "alt" 
+
+Build with GLES
+==================
+
+* For wayland
+
+  1. Please copy proprietary libraries to the directory of recipes.
+  2. Please set local.conf the following.
+
+       MACHINE_FEATURES_append = " sgx"
+       MULTI_PROVIDER_WHITELIST += "virtual/libgl virtual/egl virtual/libgles1 virtual/libgles2"
+       PREFERRED_PROVIDER_virtual/libgles1 = ""
+       PREFERRED_PROVIDER_virtual/libgles2 = "gles-user-module"
+       PREFERRED_PROVIDER_virtual/egl = "libegl"
+       PREFERRED_PROVIDER_virtual/libgl = ""
+       PREFERRED_PROVIDER_virtual/mesa = ""
+       PREFERRED_PROVIDER_libgbm = "libgbm"
+       PREFERRED_PROVIDER_libgbm-dev = "libgbm"
+
+     NOTE: The r8a7790 uses rgx, r8a7791, r8a7793 and r8a7794 uses sgx.
+           If you want to use rgx, please set to 'rgx' instaed of 'sgx'.
+
+  3. Please run 'bitbake core-image-weston'
+
+* For X11
+  1. Please copy proprietary libraries to the directory of recipes.
+  2. Please set local.conf the following.
+
+       MACHINE_FEATURES_append = " sgx"
+       MULTI_PROVIDER_WHITELIST += "virtual/libgl virtual/egl virtual/libgles1 virtual/libgles2"
+       PREFERRED_PROVIDER_virtual/libgles2 = "gles-user-module"
+       PREFERRED_PROVIDER_virtual/egl = "gles-user-module"
+       DISTRO_FEATURES_remove = "wayland"
+       BBMASK .= "|libegl|libgbm|wayland-kms"
+
+     NOTE: The r8a7790 uses rgx, r8a7791, r8a7793 and r8a7794 uses sgx.
+           If you want to use rgx, please set to 'rgx' instaed of 'sgx'.
+
+  3. Please run 'bitbake core-image-x11'
+
+Build without GLES
+==================
+
+* For X11 without rgx/sgx
+  1. Please copy proprietary libraries to the directory of recipes.
+  2. Please set local.conf the following.
+
+      DISTRO_FEATURES_remove = "wayland"
+      BBMASK .= "|libegl|libgbm|wayland-kms|gles-kernel-module|gles-user-module|gles-test-module"
+
+  3. Please run 'bitbake core-image-x11'
+
+Build with Renesas multimedia libraries
+=======================================
+
+  1. Please copy proprietary libraries to the directory of recipes.
+  2. Please modify meta-renesas/meta-rcar-gen2/conf/auto.conf with your image features.
+    "1" is ENABLE. "0" is DISABLE
+  3. Please run 'bitbake core-image-x11' or 'bitbake core-image-weston'
