@@ -35,6 +35,7 @@ GLES = "${@base_contains('MACHINE_FEATURES', 'rgx', 'rgx', \
     base_contains('MACHINE_FEATURES', 'sgx', 'sgx', '', d), d)}"
 
 RPROVIDES_${PN} += "${GLES}-kernel-module"
+RPROVIDES_${PN} += "kernel-module-bc-example kernel-module-pvrsrvkm kernel-module-dc-linuxfb"
 
 inherit module
 INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
