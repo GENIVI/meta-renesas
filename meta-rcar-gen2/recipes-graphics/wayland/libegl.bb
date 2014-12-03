@@ -4,6 +4,7 @@ LIC_FILES_CHKSUM = "file://egl.c;beginline=5;endline=15;md5=3677623633a6e459b1f6
 
 COMPATIBLE_MACHINE = "(r8a7790|r8a7791|r8a7793|r8a7794)"
 
+RPROVIDES_${PN} = "${@base_contains("DISTRO_FEATURES", "wayland", "libEGL.so", "", d)}"
 PROVIDES = "${@base_contains("DISTRO_FEATURES", "wayland", "virtual/egl", "", d)}"
 SRCREV = "ee4bce93878d02a144ae6ebfba1eff28fe9b4442"
 SRC_URI = " \
