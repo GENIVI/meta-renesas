@@ -6,6 +6,8 @@ LICENSE = "CLOSED"
 PN = "gles-user-module"
 PR = "r0"
 
+RDEPENDS_${PN} = "gles-kernel-module"
+
 COMPATIBLE_MACHINE = "(r8a7790|r8a7791|r8a7793|r8a7794)"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
