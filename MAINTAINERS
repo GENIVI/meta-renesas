@@ -15,6 +15,10 @@ Please keep this list in alphabetical order.
 Maintainers List (try to look for most precise areas first)
 
 		-----------------------------------
+Genivi branches
+M:	Stephen Lawrence <stephen.lawrence@renesas.com>
+F:	/
+
 Renesas ARM SoCs R-Car Generation 2
 M:	Takeshi Saito <takeshi.saito.xv@renesas.com>
 F:	meta-rcar-gen2

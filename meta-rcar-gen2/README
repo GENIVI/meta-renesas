@@ -12,8 +12,7 @@ board and the SoCs of the following:
 Patches
 =======
 
-Please submit any patches for this layer to: takeshi.saito.xv@renesas.com
-Please see the MAINTAINERS file for more details.
+Please see the MAINTAINERS file for who to submit patches to.
 
 Dependencies
 ============
