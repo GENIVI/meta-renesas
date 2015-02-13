@@ -1,4 +1,5 @@
 require ../../include/gles-control.inc
+require ../../include/multimedia-control.inc
 
 DESCRIPTION = "Package Group for multimedia of R-Car Gen2"
 LICENSE = "CLOSED"
@@ -19,10 +20,11 @@ MULTIMEDIA_PACKAGES ="\
     vspm-kernel-module vspm-user-module \
     s3ctl-kernel-module s3ctl-user-module \
     uvcs-kernel-module omx-user-module \
+    libmemcpy \
 "
 
 RDEPENDS_packagegroup-rcar-gen2-multimedia = "\
-    ${@ "${MULTIMEDIA_PACKAGES}" if "${MULTIMEDIA_ENABLE}" == "1" else "" } \
+    ${@ "${MULTIMEDIA_PACKAGES}" if "${USE_MULTIMEDIA}" == "1" else "" } \
     media-ctl \
 	gstreamer1.0-meta-base \
 	gstreamer1.0-meta-audio \
@@ -53,7 +55,7 @@ MULTIMEDIA_TEST_PACKAGES = "\
 "
 
 RDEPENDS_packagegroup-rcar-gen2-multimedia-tp = "\
-    ${@ '${MULTIMEDIA_TEST_PACKAGES}' if '${MULTIMEDIA_ENABLE}' == '1' and '${MULTIMEDIA_TP_ENABLE}' == '1' else '' } \
+    ${@ '${MULTIMEDIA_TEST_PACKAGES}' if '${USE_MULTIMEDIA}' == '1' and '${USE_MULTIMEDIA_TEST}' == '1' else '' } \
 "
 
 DTV_PACKAGES = "\
@@ -63,5 +65,5 @@ DTV_PACKAGES = "\
 "
 
 RDEPENDS_packagegroup-rcar-gen2-dtv = "\
-    ${@ '${DTV_PACKAGES}' if '${DTV_ENABLE}' == '1' else '' } \
+    ${@ '${DTV_PACKAGES}' if '${USE_DTV}' == '1' else '' } \
 "
