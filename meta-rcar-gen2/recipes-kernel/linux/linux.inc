@@ -5,6 +5,7 @@ LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
 inherit kernel siteinfo
+require recipes-kernel/linux/linux-yocto.inc
 
 # Enable OABI compat for people stuck with obsolete userspace
 ARM_KEEP_OABI ?= "1"
@@ -26,10 +27,11 @@ CMDLINE_append = " ${CMDLINE_DEBUG}"
 kernel_configure_variable() {
     # Remove the config
     CONF_SED_SCRIPT="$CONF_SED_SCRIPT /CONFIG_$1[ =]/d;"
-    if test "$2" = "n" ; then
-        echo "# CONFIG_$1 is not set" >> ${S}/.config
+    if test "$2" = "n"
+    then
+        echo "# CONFIG_$1 is not set" >> ${B}/.config
     else
-        echo "CONFIG_$1=$2" >> ${S}/.config
+        echo "CONFIG_$1=$2" >> ${B}/.config
     fi
 }
 
@@ -45,7 +47,14 @@ def find_cfgs(d):
 
 do_configure_prepend() {
     # Clean .config
-    echo "" > ${S}/.config
+    echo "-----"
+    pwd
+    echo "${D}"
+    echo "${S}"
+    echo "-----"
+    pwd
+
+    echo "" > ${B}/.config
     CONF_SED_SCRIPT=""
 
     # oabi / eabi support
@@ -133,11 +142,11 @@ do_configure_prepend() {
 
     # Keep this the last line
     # Remove all modified configs and add the rest to .config
-    sed -e "${CONF_SED_SCRIPT}" < '${WORKDIR}/defconfig' >> '${S}/.config'
+    sed -e "${CONF_SED_SCRIPT}" < '${WORKDIR}/defconfig' >> '${B}/.config'
 
     # add cfgs from SRC_URI.
     cfgs="${@" ".join(find_cfgs(d))}"
-    cat ${cfgs} >> '${S}/.config'
+    cat ${cfgs} >> '${B}/.config'
 
     yes '' | oe_runmake oldconfig
 }

@@ -1,15 +1,8 @@
-require linux.inc
-require linux-dtb.inc
-require linux-dtb-append.inc
 require ../../include/gles-control.inc
 require ../../include/multimedia-control.inc
 
-DESCRIPTION = "Linux kernel for the R-Car Generation 2 based board"
 COMPATIBLE_MACHINE = "(alt|gose|koelsch|lager|porter|silk|stout)"
 
-PV_append = "+git${SRCREV}"
-
-RENESAS_BACKPORTS_URL="git://git.kernel.org/pub/scm/linux/kernel/git/horms/renesas-backport.git"
 SRCREV = "ef3cb04de0d01178a64fea73ffa4c5e21e79f310"
 SRC_URI = " \
     ${RENESAS_BACKPORTS_URL};protocol=git;branch=bsp/v3.10.31-ltsi/rcar-gen2-1.9.4 \
@@ -17,11 +10,6 @@ SRC_URI = " \
     file://0001-arm-koelsch-Add-vmalloc-384M-to-bootargs-of-DTS.patch \
     file://0001-arm-alt-Add-vmalloc-384M-to-bootargs-of-DTS.patch \
     file://0001-arm-gose-Add-vmalloc-384M-to-bootargs-of-DTS.patch \
-"
-
-SRC_URI_append = " \
-    ${@' file://drm-rcar-du.cfg' \
-    if '${USE_MULTIMEDIA}' == '0' or '${USE_GLES_WAYLAND}' == '0' else ''} \
 "
 
 SRC_URI_append_lcb = " \
@@ -88,7 +76,7 @@ SRC_URI_append_lcb = " \
     file://stout/07-r8a7790-stout/0003-arm-shmobile-fix-compile-warnings.patch \
     file://stout/07-r8a7790-stout/0004-drm-rcar-du-parse-dt-adv7511-i2c-address.patch \
     file://stout/07-r8a7790-stout/0005-Fix-ADV7511-subchips-offsets.patch \
-    file://stout/07-r8a7790-stout/0006-usb-xhci-rcar-Change-RCar-Gen2-usb3-firmware-to-upstream-name.patch \
+    file://stout/07-r8a7790-stout/0006-usb-xhci-rcar-Change-RCar-Gen2-usb3-firmware-to-upstream-name.patch;apply=no \
     file://stout/07-r8a7790-stout/0007-xhci-rcar-add-firmware-for-R-Car-H2-M2-USB-3.0-host-.patch \
     file://stout/07-r8a7790-stout/0008-spi-sh-msiof-request-gpios-for-cs-gpios.patch \
     file://stout/07-r8a7790-stout/0020-arm-rmobile-Add-R8A7790-stout-board-support.patch \
@@ -97,12 +85,17 @@ SRC_URI_append_lcb = " \
 SRC_URI_append_porter = " file://can.cfg"
 SRC_URI_append_stout = " file://stout.cfg"
 
+SRC_URI_append = " \
+    ${@' file://drm-rcar-du.cfg' \
+    if '${USE_MULTIMEDIA}' == '0' or '${USE_GLES_WAYLAND}' == '0' else ''} \
+"
+
 PATCHTOOL_rcar-gen2 = "git"
 
-S = "${WORKDIR}/git"
-
-KERNEL_DEFCONFIG = "shmobile_defconfig"
-
-do_configure_prepend() {
-    install -m 0644 ${S}/arch/${ARCH}/configs/${KERNEL_DEFCONFIG} ${WORKDIR}/defconfig || die "No default configuration for ${MACHINE} / ${KERNEL_DEFCONFIG} available."
+# Because patch ID duplicates, it applies manually.
+do_patch_append_lcb () {
+	git am ${WORKDIR}/stout/07-r8a7790-stout/0006-usb-xhci-rcar-Change-RCar-Gen2-usb3-firmware-to-upstream-name.patch
 }
+
+# It is necessary to include this file after SRC_URI=
+require linux-renesas.inc
