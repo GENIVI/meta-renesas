@@ -11,6 +11,7 @@ PACKAGES = "\
     packagegroup-rcar-gen2-multimedia-tp \
     packagegroup-rcar-gen2-dtv \
 "
+PACKAGES_append_lcb = " packagegroup-lcb-oss-codecs"
 
 MULTIMEDIA_PACKAGES ="\
     mmngr-kernel-module mmngr-user-module \
@@ -21,6 +22,10 @@ MULTIMEDIA_PACKAGES ="\
     s3ctl-kernel-module s3ctl-user-module \
     uvcs-kernel-module omx-user-module \
     libmemcpy \
+"
+
+MULTIMEDIA_PACKAGES_append = " \
+    ${@ "vsp2-kernel-module" if "${USE_GLES_WAYLAND}" == "1" else "" } \
 "
 
 RDEPENDS_packagegroup-rcar-gen2-multimedia = "\
@@ -66,4 +71,19 @@ DTV_PACKAGES = "\
 
 RDEPENDS_packagegroup-rcar-gen2-dtv = "\
     ${@ '${DTV_PACKAGES}' if '${USE_DTV}' == '1' else '' } \
+"
+
+RDEPENDS_packagegroup-lcb-oss-codecs = "\
+	libmad \
+	lame \
+	faac \
+	faad2 \
+	libvorbis \
+	libogg \
+	gstreamer1.0-plugins-ugly-mad \
+	gstreamer1.0-plugins-ugly-lame \
+	gstreamer1.0-plugins-bad-faac \
+	gstreamer1.0-plugins-bad-faad \
+	gstreamer1.0-plugins-base-ogg \
+	gstreamer1.0-plugins-base-vorbis \
 "

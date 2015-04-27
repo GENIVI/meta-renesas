@@ -31,6 +31,16 @@ kernel_configure_variable() {
 	fi
 }
 
+# returns all the elements from the src uri that are .cfg files
+def find_cfgs(d):
+    sources=src_patches(d, True)
+    sources_list=[]
+    for s in sources:
+        if s.endswith('.cfg'):
+            sources_list.append(s)
+
+    return sources_list
+
 do_configure_prepend() {
 	# Clean .config
 	echo "" > ${S}/.config
@@ -110,15 +120,11 @@ do_configure_prepend() {
 	# Remove all modified configs and add the rest to .config
 	sed -e "${CONF_SED_SCRIPT}" < '${WORKDIR}/defconfig' >> '${S}/.config'
 
+	# add cfgs from SRC_URI.
+	cfgs="${@" ".join(find_cfgs(d))}"
+	cat ${cfgs} >> '${S}/.config'
+
 	yes '' | oe_runmake oldconfig
-}
-
-do_configure_append_porter() {
-    # Enable CAN
-    kernel_configure_variable CAN y
-    kernel_configure_variable CAN_RCAR y
-
-    yes '' | oe_runmake oldconfig
 }
 
 # Automatically depend on lzop-native if CONFIG_KERNEL_LZO is enabled

@@ -38,6 +38,8 @@ SRC_URI += '${@base_conditional( "DDD_MDW_DECODER", "1", " file://RTM0AC0000ADDD
 SRC_URI += '${@base_conditional( "ALAC_MDW_DECODER", "1", " file://RCG2ADALAMZ1SL32.tar.bz2;name=file23", "", d )}'
 SRC_URI += '${@base_conditional( "FLAC_MDW_DECODER", "1", " file://RCG2ADFLAMZ1SL32.tar.bz2;name=file24", "", d )}'
 SRC_URI += '${@base_conditional( "AAC_MDW_ENCODER", "1", " file://RTM0AC0000AEAACMZ1SL32C.tar.bz2;name=file25", "", d )}'
+SRC_URI += '${@base_conditional( "USE_AACLCS_DECODER", "1", " file://RCG2XAAACD20SL32.tar.bz2;name=file26", "", d )}'
+SRC_URI += '${@base_conditional( "AACS_MDW_DECODER", "1", " file://RCG2ADAACMZ1SL32.tar.bz2;name=file27", "", d )}'
 
 LISTSRC = "RTM0AC0000XCMCTL20SL32C \
            RTM0AC0000XVCMND20SL32C \
@@ -58,6 +60,7 @@ LISTSRC += '${@base_conditional( "USE_DDD_DECODER", "1", "RTM0AC0000XADD5D20SL32
 LISTSRC += '${@base_conditional( "USE_ALAC_DECODER", "1", "RTM0AC0000XAALAD20SL32C", "", d )}'
 LISTSRC += '${@base_conditional( "USE_FLAC_DECODER", "1", "RTM0AC0000XAFLAD20SL32C", "", d )}'
 LISTSRC += '${@base_conditional( "USE_AAC_ENCODER", "1", "RTM0AC0000XAAACE20SL32C", "", d )}'
+LISTSRC += '${@base_conditional( "USE_AACLCS_DECODER", "1", "RCG2XAAACD20SL32", "", d )}'
 
 MIDWARESRC = '${@base_conditional( "ARMAACP2_MDW_DECODER", "1", "RTM0AC0000ADAAPMZ1SL32C", "", d )}'
 MIDWARESRC += '${@base_conditional( "MP3_MDW_DECODER", "1", "RTM0AC0000ADMP3MZ1SL32C", "", d )}'
@@ -66,6 +69,7 @@ MIDWARESRC += '${@base_conditional( "DDD_MDW_DECODER", "1", "RTM0AC0000ADDD5MZ1S
 MIDWARESRC += '${@base_conditional( "ALAC_MDW_DECODER", "1", "RCG2ADALAMZ1SL32", "", d )}'
 MIDWARESRC += '${@base_conditional( "FLAC_MDW_DECODER", "1", "RCG2ADFLAMZ1SL32", "", d )}'
 MIDWARESRC += '${@base_conditional( "AAC_MDW_ENCODER", "1", "RTM0AC0000AEAACMZ1SL32C", "", d )}'
+MIDWARESRC += '${@base_conditional( "AACS_MDW_DECODER", "1", "RCG2ADAACMZ1SL32", "", d )}'
 
 S = "${WORKDIR}/omx"
 
@@ -260,6 +264,12 @@ do_install() {
         ln -sf libomxr_mc_aace.so.2.0.0 libomxr_mc_aace.so
     fi
 
+    # aaclcs dec omx
+    if [ "X${USE_AACLCS_DECODER}" = "X1" ] ; then
+        ln -sf libomxr_mc_aaclcd.so.2.0.0 libomxr_mc_aaclcd.so.2
+        ln -sf libomxr_mc_aaclcd.so.2.0.0 libomxr_mc_aaclcd.so
+    fi
+
     # Copy all the symbolic link and lib to destination
     cp -Prf ${S}/OMXR/lib/* ${D}/usr/local/lib
     
@@ -330,32 +340,16 @@ do_install() {
         cp -P ${S}/audio_mdw/RSAACE_AAC.h ${D}/usr/local/include
         cp -P ${S}/audio_mdw/RSAACE_AAC.h ${STAGING_INCDIR}
     fi
-}
 
-do_install_append() {
-	if [ "X${MACHINE}" = "Xsilk" -o "X${MACHINE}" = "Xporter" ] ; then
-		cd ${S}/OMXR/lib/
+    if [ "X${AACS_MDW_DECODER}" = "X1" ] ; then
+        cd ${S}/audio_mdw
+        ln -sf libAACDLA_L.so.2.4 libAACDLA_L.so.2
+        ln -sf libAACDLA_L.so.2.4 libAACDLA_L.so
+        cp -P ${S}/audio_mdw/*.so* ${D}/usr/local/lib/
+        cp -P ${S}/audio_mdw/aacd_Lib.h ${D}/usr/local/include
+        cp -P ${S}/audio_mdw/aacd_Lib.h ${STAGING_INCDIR}
+    fi
 
-		ln -sf libomxr_core.so.0.0.0 libomxr_core.so.2.0.0
-		ln -sf libomxr_core.so.0.0.0 libomxr_core.so.0
-		ln -sf libomxr_mc_cmn.so.0.0.0 libomxr_mc_cmn.so.2.0.0
-		ln -sf libomxr_mc_h264d.so.0.0.0 libomxr_mc_h264d.so.2.0.0
-		ln -sf libomxr_mc_h264d.so.0.0.0 libomxr_mc_h264d.so.0
-		ln -sf libomxr_mc_h264e.so.0.0.0 libomxr_mc_h264e.so.2.0.0
-		ln -sf libomxr_mc_h264e.so.0.0.0 libomxr_mc_h264e.so.0
-		ln -sf libomxr_mc_vecmn.so.0.0.0 libomxr_mc_vecmn.so.2.0.0
-		ln -sf libomxr_mc_vcmn.so.0.0.0 libomxr_mc_vcmn.so.2.0.0
-		ln -sf libomxr_mc_vdcmn.so.0.0.0 libomxr_mc_vdcmn.so.2.0.0
-		ln -sf libuvcs_dec.so.0.0.0 libuvcs_dec.so.1.0.0
-		ln -sf libuvcs_enc.so.0.0.0 libuvcs_enc.so.1.0.0
-		ln -sf libvcp3_avcd.so.0.0.0 libvcp3_avcd.so.1.0.0
-		ln -sf libvcp3_avce.so.0.0.0 libvcp3_avce.so.1.0.0
-		ln -sf libvcp3_mcvd.so.0.0.0 libvcp3_mcvd.so.1.0.0
-		ln -sf libvcp3_mcve.so.0.0.0 libvcp3_mcve.so.1.0.0
-
-		# Copy all the symbolic link and lib to destination
-		cp -Prf ${S}/OMXR/lib/* ${D}/usr/local/lib
-	fi
 }
 
 SYSROOT_PREPROCESS_FUNCS += "do_populate_share_lib"
@@ -395,6 +389,11 @@ do_clean_sharedfiles() {
 
     rm -f ${LIBSHARED}/libRSAACELA_L.so*
     rm -f ${STAGING_INCDIR}/RSAACE_AAC.h
+
+    rm -f ${LIBSHARED}/libomxr_mc_aaclcd.so*
+    rm -f ${LIBSHARED}/libAACDLA_L.so*
+    rm -f ${STAGING_INCDIR}/aacd_Lib.h
+
 }
 
 PACKAGES = "\
