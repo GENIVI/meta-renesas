@@ -46,9 +46,9 @@ do_populate_lic[noexec] = "1"
 
 export BUILDDIR = "${STAGING_INCDIR}/.."
 export LIBSHARED = "${STAGING_LIBDIR}"
-export KERNELSRC = "${STAGING_KERNEL_DIR}"
+export KERNELSRC = "${STAGING_KERNEL_BUILDDIR}"
 export CROSS_COMPILE = "${TARGET_PREFIX}"
-export KERNELDIR = "${STAGING_KERNEL_DIR}"
+export KERNELDIR = "${STAGING_KERNEL_BUILDDIR}"
 export LDFLAGS=""
 export CP = "cp"
 
