@@ -20,7 +20,7 @@ SRC_URI = " \
 # inherit autotools pkgconfig
 
 export INSTALL_MOD_DIR="kernel/linux-fusion-modules"
-export KERNEL_SRC="${STAGING_KERNEL_DIR}"
+export KERNEL_SRC="${STAGING_KERNEL_BUILDDIR}"
 
 do_install_append() {
     install -d ${D}/usr/include/linux
