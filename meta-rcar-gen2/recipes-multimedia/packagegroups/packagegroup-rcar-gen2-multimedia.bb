@@ -31,9 +31,9 @@ MULTIMEDIA_PACKAGES_append = " \
 RDEPENDS_packagegroup-rcar-gen2-multimedia = "\
     ${@ "${MULTIMEDIA_PACKAGES}" if "${USE_MULTIMEDIA}" == "1" else "" } \
     media-ctl \
-	gstreamer1.0-meta-base \
-	gstreamer1.0-meta-audio \
-	gstreamer1.0-meta-video \
+    gstreamer1.0-meta-base \
+    gstreamer1.0-meta-audio \
+    gstreamer1.0-meta-video \
     gstreamer1.0-plugins-base-audioconvert \
     gstreamer1.0-plugins-base-audioresample \
     gstreamer1.0-plugins-base-playback \
@@ -42,7 +42,7 @@ RDEPENDS_packagegroup-rcar-gen2-multimedia = "\
     gstreamer1.0-plugins-base-videoscale \
     gstreamer1.0-plugins-good-avi \
     gstreamer1.0-plugins-good-audioparsers \
-	gstreamer1.0-plugins-good-id3demux \
+    gstreamer1.0-plugins-good-id3demux \
     gstreamer1.0-plugins-bad-faad \
     gstreamer1.0-plugins-bad-mpegtsdemux \
     gstreamer1.0-plugins-bad-debugutilsbad \
@@ -74,16 +74,16 @@ RDEPENDS_packagegroup-rcar-gen2-dtv = "\
 "
 
 RDEPENDS_packagegroup-lcb-oss-codecs = "\
-	libmad \
-	lame \
-	faac \
-	faad2 \
-	libvorbis \
-	libogg \
-	gstreamer1.0-plugins-ugly-mad \
-	gstreamer1.0-plugins-ugly-lame \
-	gstreamer1.0-plugins-bad-faac \
-	gstreamer1.0-plugins-bad-faad \
-	gstreamer1.0-plugins-base-ogg \
-	gstreamer1.0-plugins-base-vorbis \
+    libmad \
+    lame \
+    faac \
+    faad2 \
+    libvorbis \
+    libogg \
+    gstreamer1.0-plugins-ugly-mad \
+    gstreamer1.0-plugins-ugly-lame \
+    gstreamer1.0-plugins-bad-faac \
+    gstreamer1.0-plugins-bad-faad \
+    gstreamer1.0-plugins-base-ogg \
+    gstreamer1.0-plugins-base-vorbis \
 "

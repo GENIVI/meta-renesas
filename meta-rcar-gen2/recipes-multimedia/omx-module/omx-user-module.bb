@@ -2,20 +2,23 @@ require ../../include/rcar-gen2-modules-common.inc
 require ../../include/omx-components-control.inc
 
 LICENSE = "CLOSED"
-DEPENDS = "mmngr-kernel-module mmngr-user-module \
-           vspm-kernel-module vspm-user-module \
-           s3ctl-kernel-module s3ctl-user-module \
-           fdpm-kernel-module fdpm-user-module \
-           uvcs-kernel-module"
+DEPENDS = " \
+    mmngr-kernel-module mmngr-user-module \
+    vspm-kernel-module vspm-user-module \
+    s3ctl-kernel-module s3ctl-user-module \
+    fdpm-kernel-module fdpm-user-module \
+    uvcs-kernel-module \
+"
 
 PR = "r0"
 PV = "1.0"
 PN = "omx-user-module"
 
-SRC_URI = "file://RTM0AC0000XCMCTL20SL32C.tar.bz2;name=file1 \
-           file://RTM0AC0000XVCMND20SL32C.tar.bz2;name=file2 \
-           file://RTM0AC0000XV264D20SL32C.tar.bz2;name=file3 \
-           "
+SRC_URI = " \
+    file://RTM0AC0000XCMCTL20SL32C.tar.bz2;name=file1 \
+    file://RTM0AC0000XVCMND20SL32C.tar.bz2;name=file2 \
+    file://RTM0AC0000XV264D20SL32C.tar.bz2;name=file3 \
+"
 SRC_URI += '${@base_conditional( "USE_H263_DECODER", "1", " file://RTM0AC0000XV263D20SL32C.tar.bz2;name=file4", "", d )}'
 SRC_URI += '${@base_conditional( "USE_MPEG2_DECODER", "1", " file://RTM0AC0000XVM2VD20SL32C.tar.bz2;name=file5", "", d )}'
 SRC_URI += '${@base_conditional( "USE_MPEG4_DECODER", "1", " file://RTM0AC0000XVM4VD20SL32C.tar.bz2;name=file6", "", d )}'
@@ -41,9 +44,11 @@ SRC_URI += '${@base_conditional( "AAC_MDW_ENCODER", "1", " file://RTM0AC0000AEAA
 SRC_URI += '${@base_conditional( "USE_AACLCS_DECODER", "1", " file://RCG2XAAACD20SL32.tar.bz2;name=file26", "", d )}'
 SRC_URI += '${@base_conditional( "AACS_MDW_DECODER", "1", " file://RCG2ADAACMZ1SL32.tar.bz2;name=file27", "", d )}'
 
-LISTSRC = "RTM0AC0000XCMCTL20SL32C \
-           RTM0AC0000XVCMND20SL32C \
-           RTM0AC0000XV264D20SL32C"
+LISTSRC = " \
+    RTM0AC0000XCMCTL20SL32C \
+    RTM0AC0000XVCMND20SL32C \
+    RTM0AC0000XV264D20SL32C \
+"
 
 LISTSRC += '${@base_conditional( "USE_H263_DECODER", "1", "RTM0AC0000XV263D20SL32C", "", d )}'
 LISTSRC += '${@base_conditional( "USE_MPEG2_DECODER", "1", "RTM0AC0000XVM2VD20SL32C", "", d )}'
@@ -96,7 +101,6 @@ do_collect_src() {
     done
 }
 
-
 do_configure() {
     cd ${S}/UDF_Linux
     ./autogen.sh
@@ -135,7 +139,7 @@ do_install() {
 
     ln -sf libomxr_mc_vdcmn.so.2.0.0 libomxr_mc_vdcmn.so.2
     ln -sf libomxr_mc_vdcmn.so.2.0.0 libomxr_mc_vdcmn.so
-    
+
     ln -sf libuvcs_dec.so.1.0.0 libuvcs_dec.so.1
     ln -sf libuvcs_dec.so.1.0.0 libuvcs_dec.so
 
@@ -145,10 +149,10 @@ do_install() {
     # H264 Decoder
     ln -sf libomxr_mc_h264d.so.2.0.0 libomxr_mc_h264d.so.2
     ln -sf libomxr_mc_h264d.so.2.0.0 libomxr_mc_h264d.so
-    
+
     ln -sf libvcp3_avcd.so.1.0.0 libvcp3_avcd.so.1
     ln -sf libvcp3_avcd.so.1.0.0 libvcp3_avcd.so
-    
+
     # H263 Decoder
     if [ "X${USE_H263_DECODER}" = "X1" ] ; then
         ln -sf libomxr_mc_h263d.so.2.0.0 libomxr_mc_h263d.so.2
@@ -199,7 +203,7 @@ do_install() {
     if [ "X${USE_H264AVC_ENCODER}" = "X1" ] ; then
         ln -sf libomxr_mc_h264e.so.2.0.0 libomxr_mc_h264e.so.2
         ln -sf libomxr_mc_h264e.so.2 libomxr_mc_h264e.so
-        
+
         ln -sf libvcp3_avce.so.1.0.0 libvcp3_avce.so.1
         ln -sf libvcp3_avce.so.1.0.0 libvcp3_avce.so
     fi
@@ -215,7 +219,7 @@ do_install() {
         ln -sf libvcp3_mcve.so.1.0.0 libvcp3_mcve.so.1
         ln -sf libvcp3_mcve.so.1.0.0 libvcp3_mcve.so
     fi
-    
+
     # audio common OMX
     if [ "X${USE_AUDIO_COMMON}" = "X1" ] ; then
         ln -sf libomxr_mc_acmn.so.2.0.0 libomxr_mc_acmn.so.2
@@ -272,7 +276,7 @@ do_install() {
 
     # Copy all the symbolic link and lib to destination
     cp -Prf ${S}/OMXR/lib/* ${D}/usr/local/lib
-    
+
     # Copy the audio midleware
     # audio aacp2 midleware
     if [ "X${ARMAACP2_MDW_DECODER}" = "X1" ] ; then
@@ -286,7 +290,7 @@ do_install() {
         cp -P ${S}/audio_mdw/RSACPD_ADL.h ${D}/usr/local/include
         cp -P ${S}/audio_mdw/RSACPD_ADL.h ${STAGING_INCDIR}
     fi
-    
+
     if [ "X${MP3_MDW_DECODER}" = "X1" ] ; then
         cd ${S}/audio_mdw
         ln -sf libMP3DLA_L.so.1.4 libMP3DLA_L.so.1
@@ -295,7 +299,7 @@ do_install() {
         cp -P ${S}/audio_mdw/mp3d_Lib.h ${D}/usr/local/include
         cp -P ${S}/audio_mdw/mp3d_Lib.h ${STAGING_INCDIR}
     fi
-    
+
     if [ "X${WMA_MDW_DECODER}" = "X1" ] ; then
         cd ${S}/audio_mdw
         ln -sf libWMASTDLA_L.so.1.3 libWMASTDLA_L.so.1
@@ -371,7 +375,7 @@ do_clean_sharedfiles() {
     rm -f ${LIBSHARED}/libRSACPDLA_L.so*
     rm -f ${LIBSHARED}/libRSACPDAL_L.so*
     rm -f ${STAGING_INCDIR}/RSACPD_ADL.h
-    
+
     rm -f ${LIBSHARED}/libMP3DLA_L.so*
     rm -f ${STAGING_INCDIR}/mp3d_Lib.h
 

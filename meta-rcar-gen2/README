@@ -12,7 +12,7 @@ board and the SoCs of the following:
 Patches
 =======
 
-Please submit any patches for this layer to: nobuhiro.iwamatsu.yj@renesas.com
+Please submit any patches for this layer to: takeshi.saito.xv@renesas.com
 Please see the MAINTAINERS file for more details.
 
 Dependencies
@@ -22,11 +22,15 @@ This layer depends on:
 
 	URI: git://git.yoctoproject.org/poky
 	layers: meta, meta-yocto, meta-yocto-bsp
-	branch: master
+	branch: daisy
 
 	URI: git://git.yoctoproject.org/meta-renesas
-	layers: renesas
-	branch: master
+	layers: renesas, meta-rcar-gen2
+	branch: daisy
+
+	URI: git://git.openembedded.org/meta-openembedded
+	layers: meta-oe
+	branch: daisy
 
 Build Instructions
 ==================
@@ -43,6 +47,7 @@ meta-rcar-gen2 layer. e.g.:
 		<path to layer>/poky/meta-yocto-bsp \
 		<path to layer>/meta-renesas \
 		<path to layer>/meta-renesas/meta-rcar-gen2 \
+		<path to layer>/meta-openembedded/meta-oe \
 	"
 
 To build a specific target BSP configure the associated machine in local.conf:

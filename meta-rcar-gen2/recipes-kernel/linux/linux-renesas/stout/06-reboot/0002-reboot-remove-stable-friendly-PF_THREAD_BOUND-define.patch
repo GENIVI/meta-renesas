@@ -1,0 +1,40 @@
+From 0efbee70890c992f31a7b294ac654ff6c62d51c5 Mon Sep 17 00:00:00 2001
+From: Robin Holt <holt@sgi.com>
+Date: Mon, 8 Jul 2013 16:01:31 -0700
+Subject: [PATCH] reboot: remove -stable friendly PF_THREAD_BOUND define
+
+Remove the prior patch's #define for easier backporting to the stable
+releases.
+
+Signed-off-by: Robin Holt <holt@sgi.com>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Russ Anderson <rja@sgi.com>
+Cc: Robin Holt <holt@sgi.com>
+Cc: Russell King <rmk+kernel@arm.linux.org.uk>
+Cc: Guan Xuetao <gxt@mprc.pku.edu.cn>
+Cc: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+---
+ kernel/sys.c | 5 -----
+ 1 file changed, 5 deletions(-)
+
+diff --git a/kernel/sys.c b/kernel/sys.c
+index 071de90..b882440 100644
+--- a/kernel/sys.c
++++ b/kernel/sys.c
+@@ -362,11 +362,6 @@ int unregister_reboot_notifier(struct notifier_block *nb)
+ }
+ EXPORT_SYMBOL(unregister_reboot_notifier);
+ 
+-/* Add backwards compatibility for stable trees. */
+-#ifndef PF_NO_SETAFFINITY
+-#define PF_NO_SETAFFINITY		PF_THREAD_BOUND
+-#endif
+-
+ static void migrate_to_reboot_cpu(void)
+ {
+ 	/* The boot cpu is always logical cpu 0 */
+-- 
+1.9.1
+

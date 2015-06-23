@@ -1,0 +1,40 @@
+From f161d22081e9b81f0b35411c428af347ca3dd449 Mon Sep 17 00:00:00 2001
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Date: Tue, 23 Jul 2013 12:16:02 +0200
+Subject: [PATCH] regmap: core: allow a virtual range to cover its own data
+ window
+
+I see no reason why a virtual range shouldn't be allowed to cover its
+own data window if the page selection register is in the same place
+on every page.
+For chips which use paged access for all of their registers, but only
+when connected via I2C, and which can access the whole register space
+directly when connected via SPI, this allows to avoid acrobatics with
+the register ranges by simply mapping the I2C ranges over the data
+window beginning at 0x0, and then using linear access for the SPI
+variant.
+
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+Signed-off-by: Mark Brown <broonie@linaro.org>
+---
+ drivers/base/regmap/regmap.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/drivers/base/regmap/regmap.c b/drivers/base/regmap/regmap.c
+index e0d0c7d..436fac0 100644
+--- a/drivers/base/regmap/regmap.c
++++ b/drivers/base/regmap/regmap.c
+@@ -687,6 +687,10 @@ skip_format_initialization:
+ 			unsigned win_max = win_min +
+ 					   config->ranges[j].window_len - 1;
+ 
++			/* Allow data window inside its own virtual range */
++			if (j == i)
++				continue;
++
+ 			if (range_cfg->range_min <= sel_reg &&
+ 			    sel_reg <= range_cfg->range_max) {
+ 				dev_err(map->dev,
+-- 
+1.9.1
+

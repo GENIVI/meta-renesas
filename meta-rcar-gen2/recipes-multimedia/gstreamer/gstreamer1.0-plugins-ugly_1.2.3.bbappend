@@ -4,9 +4,9 @@ S = "${WORKDIR}/git"
 
 PACKAGECONFIG ??= " \
     a52dec lame mad mpeg2dec \
-    "
+"
 
 do_configure() {
-	./autogen.sh --noconfigure
-	oe_runconf
+    ./autogen.sh --noconfigure
+    oe_runconf
 }

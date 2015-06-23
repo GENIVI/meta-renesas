@@ -2493,7 +2493,7 @@ new file mode 100644
 index 0000000..89f371e
 --- /dev/null
 +++ b/include/configs/silk.h
-@@ -0,0 +1,214 @@
+@@ -0,0 +1,215 @@
 +/*
 + * include/configs/silk.h
 + *     This file is silk board configuration.
@@ -2681,6 +2681,7 @@ index 0000000..89f371e
 +/* FS */
 +#define CONFIG_DOS_PARTITION
 +#define CONFIG_SUPPORT_VFAT
++#define CONFIG_NFS_TIMEOUT	10000UL
 +
 +/* USB */
 +#define CONFIG_USB_STORAGE

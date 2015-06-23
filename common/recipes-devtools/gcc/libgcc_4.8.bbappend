@@ -1,15 +1,15 @@
 do_install_append () {
-	BINVER=`${TARGET_PREFIX}gcc -dumpversion`
-	if [ ${BINVER} != ${BINV} ] ; then
-		rm -rf ${D}${libdir}/${TARGET_SYS}/${BINVER}/include
-		SRC=${D}${libdir}/${TARGET_SYS}/${BINV}
-		DEST=${D}${libdir}/${TARGET_SYS}/${BINVER}
-		install -d ${SRC} ${DEST}
-		for f in ${SRC}/*
-		do
-			cp ${f} ${DEST}
-		done
-	fi
+    BINVER=`${TARGET_PREFIX}gcc -dumpversion`
+    if [ ${BINVER} != ${BINV} ] ; then
+        rm -rf ${D}${libdir}/${TARGET_SYS}/${BINVER}/include
+        SRC=${D}${libdir}/${TARGET_SYS}/${BINV}
+        DEST=${D}${libdir}/${TARGET_SYS}/${BINVER}
+        install -d ${SRC} ${DEST}
+        for f in ${SRC}/*
+        do
+            cp ${f} ${DEST}
+        done
+    fi
 }
 
 python do_package_prepend () {
@@ -35,4 +35,3 @@ python do_package_prepend () {
             packages_libgcov = 'FILES_libgcov-dev'
         d.appendVar(packages_libgcov, appendprefix + "libgcov.a")
 }
-

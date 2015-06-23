@@ -1,4 +1,4 @@
-require ../../include/rcar-gen2-modules-common.inc 
+require ../../include/rcar-gen2-modules-common.inc
 
 LICENSE = "CLOSED"
 DEPENDS = "s3ctl-kernel-module s3ctl-user-module"

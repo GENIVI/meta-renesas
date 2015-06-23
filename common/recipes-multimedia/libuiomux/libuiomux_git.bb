@@ -23,6 +23,6 @@ EXTRA_OECONF_bockw = "--with-max-map-mem=${UIO_MAX_MAP_MEM}"
 EXTRA_OECONF_armadillo800eva = "--with-max-map-mem=${UIO_MAX_MAP_MEM}"
 
 do_configure() {
-	autoreconf -ivf ${S}
-	oe_runconf
+    autoreconf -ivf ${S}
+    oe_runconf
 }

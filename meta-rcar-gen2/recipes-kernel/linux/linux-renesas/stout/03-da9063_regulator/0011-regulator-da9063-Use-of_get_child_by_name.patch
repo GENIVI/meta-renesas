@@ -1,0 +1,30 @@
+From 25cc275a8b5f298b28775682163a11a656d1a7eb Mon Sep 17 00:00:00 2001
+From: Sachin Kamat <sachin.kamat@linaro.org>
+Date: Fri, 14 Feb 2014 17:19:58 +0530
+Subject: [PATCH] regulator: da9063: Use of_get_child_by_name
+
+of_find_node_by_name walks the allnodes list, and can thus walk
+outside of the parent node. Use of_get_child_by_name instead.
+
+Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
+Signed-off-by: Mark Brown <broonie@linaro.org>
+---
+ drivers/regulator/da9063-regulator.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/regulator/da9063-regulator.c b/drivers/regulator/da9063-regulator.c
+index 56727eb..cee856c 100644
+--- a/drivers/regulator/da9063-regulator.c
++++ b/drivers/regulator/da9063-regulator.c
+@@ -664,7 +664,7 @@ static struct da9063_regulators_pdata *da9063_parse_regulators_dt(
+ 	struct device_node *node;
+ 	int i, n, num;
+ 
+-	node = of_find_node_by_name(pdev->dev.parent->of_node, "regulators");
++	node = of_get_child_by_name(pdev->dev.parent->of_node, "regulators");
+ 	if (!node) {
+ 		dev_err(&pdev->dev, "Regulators device node not found\n");
+ 		return ERR_PTR(-ENODEV);
+-- 
+1.9.1
+

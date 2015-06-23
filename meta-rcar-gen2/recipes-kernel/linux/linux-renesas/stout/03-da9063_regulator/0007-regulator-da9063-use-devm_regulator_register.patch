@@ -1,0 +1,76 @@
+From e97bba912eede5e813788bc9ead4a2c29130d377 Mon Sep 17 00:00:00 2001
+From: Jingoo Han <jg1.han@samsung.com>
+Date: Mon, 30 Sep 2013 09:53:09 +0900
+Subject: [PATCH] regulator: da9063: use devm_regulator_register()
+
+Use devm_regulator_register() to make cleanup paths simpler.
+
+Signed-off-by: Jingoo Han <jg1.han@samsung.com>
+Signed-off-by: Mark Brown <broonie@linaro.org>
+---
+ drivers/regulator/da9063-regulator.c | 21 ++++-----------------
+ 1 file changed, 4 insertions(+), 17 deletions(-)
+
+diff --git a/drivers/regulator/da9063-regulator.c b/drivers/regulator/da9063-regulator.c
+index 1a78163..62b8469 100644
+--- a/drivers/regulator/da9063-regulator.c
++++ b/drivers/regulator/da9063-regulator.c
+@@ -847,13 +847,13 @@ static int da9063_regulator_probe(struct platform_device *pdev)
+ 		if (da9063_reg_matches)
+ 			config.of_node = da9063_reg_matches[id].of_node;
+ 		config.regmap = da9063->regmap;
+-		regl->rdev = regulator_register(&regl->desc, &config);
++		regl->rdev = devm_regulator_register(&pdev->dev, &regl->desc,
++						     &config);
+ 		if (IS_ERR(regl->rdev)) {
+ 			dev_err(&pdev->dev,
+ 				"Failed to register %s regulator\n",
+ 				regl->desc.name);
+-			ret = PTR_ERR(regl->rdev);
+-			goto err;
++			return PTR_ERR(regl->rdev);
+ 		}
+ 		id++;
+ 		n++;
+@@ -862,9 +862,8 @@ static int da9063_regulator_probe(struct platform_device *pdev)
+ 	/* LDOs overcurrent event support */
+ 	irq = platform_get_irq_byname(pdev, "LDO_LIM");
+ 	if (irq < 0) {
+-		ret = irq;
+ 		dev_err(&pdev->dev, "Failed to get IRQ.\n");
+-		goto err;
++		return irq;
+ 	}
+ 
+ 	regulators->irq_ldo_lim = regmap_irq_get_virq(da9063->regmap_irq, irq);
+@@ -881,27 +880,15 @@ static int da9063_regulator_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	return 0;
+-
+-err:
+-	/* Wind back regulators registeration */
+-	while (--n >= 0)
+-		regulator_unregister(regulators->regulator[n].rdev);
+-
+-	return ret;
+ }
+ 
+ static int da9063_regulator_remove(struct platform_device *pdev)
+ {
+ 	struct da9063_regulators *regulators = platform_get_drvdata(pdev);
+-	struct da9063_regulator *regl;
+ 
+ 	free_irq(regulators->irq_ldo_lim, regulators);
+ 	free_irq(regulators->irq_uvov, regulators);
+ 
+-	for (regl = &regulators->regulator[regulators->n_regulators - 1];
+-	     regl >= &regulators->regulator[0]; regl--)
+-		regulator_unregister(regl->rdev);
+-
+ 	return 0;
+ }
+ 
+-- 
+1.9.1
+

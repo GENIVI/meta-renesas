@@ -6,8 +6,10 @@ COMPATIBLE_MACHINE = "(r8a7790|r8a7791|r8a7793|r8a7794)"
 
 PROVIDES = "${@base_contains("DISTRO_FEATURES", "wayland", "virtual/egl", "", d)}"
 SRCREV = "ee4bce93878d02a144ae6ebfba1eff28fe9b4442"
-SRC_URI = "git://github.com/thayama/libegl;protocol=git;branch=master \
-           file://0001-libegl-Remove-duplicate-header-files-of-gles-user-mo.patch"
+SRC_URI = " \
+    git://github.com/thayama/libegl;protocol=git;branch=master \
+    file://0001-libegl-Remove-duplicate-header-files-of-gles-user-mo.patch \
+"
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 

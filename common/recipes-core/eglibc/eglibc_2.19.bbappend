@@ -1,1 +1,1 @@
-INSANE_SKIP_nativesdk-nscd  += "textrel"
+INSANE_SKIP_nativesdk-nscd += "textrel"

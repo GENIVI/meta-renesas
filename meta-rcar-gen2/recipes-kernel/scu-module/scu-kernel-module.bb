@@ -1,7 +1,8 @@
 require ../../include/rcar-gen2-modules-common.inc
 
 LICENSE = "GPLv2&MIT"
-LIC_FILES_CHKSUM = "file://src/include/GPL-COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
+LIC_FILES_CHKSUM = " \
+    file://src/include/GPL-COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
     file://src/include/MIT-COPYING;md5=fea016ce2bdf2ec10080f69e9381d378 \
 "
 DEPENDS = "linux-renesas"
@@ -9,6 +10,7 @@ PN = "scu-kernel-module"
 PR = "r0"
 SRC_URI = "file://scu-kernel.tar.bz2"
 S = "${WORKDIR}"
+
 do_compile() {
     cd ${S}/src/drv
     make clean ARCH=arm

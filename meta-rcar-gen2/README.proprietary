@@ -163,6 +163,7 @@ III/ Build with Renesas multimedia libraries
 				#BBMASK .= "|${BB_MULTIMEDIA_TEST_MODULE}"
 
 			# Configuration for gles test package
+			This test app ONLY supports X11 environment.
 			Step 1 : Adding DISTRO_FEATURES
 
 				DISTRO_FEATURES_append = " gles-test"

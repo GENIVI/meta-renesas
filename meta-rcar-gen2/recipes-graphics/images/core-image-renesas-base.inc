@@ -1,11 +1,12 @@
 require ../../include/multimedia-control.inc
 require ../../include/gles-control.inc
+
 # common
 IMAGE_INSTALL_append_rcar-gen2 = " \
-   alsa-utils alsa-tools \
-   libdrm-tests \
-   libdrm-kms \
-   bash \
+    alsa-utils alsa-tools \
+    libdrm-tests \
+    libdrm-kms \
+    bash \
 "
 
 IMAGE_INSTALL_append_rcar-gen2 = " \
@@ -28,17 +29,17 @@ IMAGE_INSTALL_append_rcar-gen2 = '${@base_conditional("USE_GLES", "1", \
 
 # pkg groups for multimedia
 IMAGE_INSTALL_append_rcar-gen2 = ' ${@base_contains("USE_MULTIMEDIA", "1", " \
-	 packagegroup-rcar-gen2-multimedia \
-	", "", d)}'
+    packagegroup-rcar-gen2-multimedia \
+    ", "", d)}'
 # pkg groups for multimedia test program
 IMAGE_INSTALL_append_rcar-gen2 = ' ${@base_contains("USE_MULTIMEDIA_TEST", "1", " \
-	packagegroup-rcar-gen2-multimedia-tp \
-	", "", d)}'
+    packagegroup-rcar-gen2-multimedia-tp \
+    ", "", d)}'
 # pkg groups for dtv
 IMAGE_INSTALL_append_rcar-gen2 = ' ${@base_contains("USE_DTV", "1", " \
-	 packagegroup-rcar-gen2-dtv \
-	", "", d)}'
+    packagegroup-rcar-gen2-dtv \
+    ", "", d)}'
 # pkg groups for graphic test program
 IMAGE_INSTALL_append_rcar-gen2 = ' ${@base_contains("USE_GLES_TEST", "1", " \
-	 gles-test-module \
-	", "", d)}'
+    gles-test-module \
+    ", "", d)}'

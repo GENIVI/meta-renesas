@@ -20,6 +20,6 @@ S = "${WORKDIR}/git/"
 EXTRA_OECONF = "--with-max-map-mem=105"
 
 do_configure() {
-	autoreconf -ivf ${S}
-	oe_runconf
+    autoreconf -ivf ${S}
+    oe_runconf
 }

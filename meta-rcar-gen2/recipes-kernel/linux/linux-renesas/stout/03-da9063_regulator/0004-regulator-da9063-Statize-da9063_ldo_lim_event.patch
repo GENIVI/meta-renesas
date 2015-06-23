@@ -1,0 +1,29 @@
+From 632b3d62bcd5631ad45d3bfe7cbfa7e9572f4025 Mon Sep 17 00:00:00 2001
+From: Axel Lin <axel.lin@ingics.com>
+Date: Sun, 1 Sep 2013 12:19:51 +0800
+Subject: [PATCH] regulator: da9063: Statize da9063_ldo_lim_event
+
+da9063_ldo_lim_event() is only referenced in this driver, make it static.
+
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
+Signed-off-by: Mark Brown <broonie@linaro.org>
+---
+ drivers/regulator/da9063-regulator.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/regulator/da9063-regulator.c b/drivers/regulator/da9063-regulator.c
+index 139ad45..1a78163 100644
+--- a/drivers/regulator/da9063-regulator.c
++++ b/drivers/regulator/da9063-regulator.c
+@@ -592,7 +592,7 @@ static struct da9063_dev_model regulators_models[] = {
+ };
+ 
+ /* Regulator interrupt handlers */
+-irqreturn_t da9063_ldo_lim_event(int irq, void *data)
++static irqreturn_t da9063_ldo_lim_event(int irq, void *data)
+ {
+ 	struct da9063_regulators *regulators = data;
+ 	struct da9063 *hw = regulators->regulator[0].hw;
+-- 
+1.9.1
+

@@ -1,7 +1,8 @@
 require ../../include/rcar-gen2-modules-common.inc
 
 LICENSE = "GPLv2&MIT"
-LIC_FILES_CHKSUM = "file://vspm/drv/GPL-COPYING;md5=12f884d2ae1ff87c09e5b7ccc2c4ca7e \
+LIC_FILES_CHKSUM = " \
+    file://vspm/drv/GPL-COPYING;md5=12f884d2ae1ff87c09e5b7ccc2c4ca7e \
     file://vspm/drv/MIT-COPYING;md5=fea016ce2bdf2ec10080f69e9381d378 \
 "
 DEPENDS = "linux-renesas"
@@ -64,9 +65,9 @@ FILES_${PN} = " \
 "
 
 FILES_${PN}-dev = " \
-  /usr/src/kernel/include \
-  /usr/src/kernel/include/*.h \
-  /usr/src/kernel/include/vspm.symvers \
+    /usr/src/kernel/include \
+    /usr/src/kernel/include/*.h \
+    /usr/src/kernel/include/vspm.symvers \
 "
 
 RPROVIDES_${PN} += "vspm-kernel-module"

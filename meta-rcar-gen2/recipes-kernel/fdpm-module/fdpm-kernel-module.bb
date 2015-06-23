@@ -1,8 +1,10 @@
 require ../../include/rcar-gen2-modules-common.inc
 
 LICENSE = "GPLv2&MIT"
-LIC_FILES_CHKSUM = "file://drv/GPL-COPYING;md5=ffa10f40b98be2c2bc9608f56827ed23 \
-    file://drv/MIT-COPYING;md5=5526ef6e21dc96a1dd89fac4bde9f995"
+LIC_FILES_CHKSUM = " \
+    file://drv/GPL-COPYING;md5=ffa10f40b98be2c2bc9608f56827ed23 \
+    file://drv/MIT-COPYING;md5=5526ef6e21dc96a1dd89fac4bde9f995 \
+"
 
 DEPENDS = "linux-renesas mmngr-kernel-module"
 PN = "fdpm-kernel-module"

@@ -5,10 +5,12 @@ DEPENDS = "linux-renesas"
 PN = "mmngrbuf-kernel-module"
 PR = "r0"
 SRC_URI = "file://mmngrbuf.tar.bz2"
-LIC_FILES_CHKSUM = "file://drv/GPL-COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
+LIC_FILES_CHKSUM = " \
+    file://drv/GPL-COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
     file://drv/MIT-COPYING;md5=fea016ce2bdf2ec10080f69e9381d378 \
     file://include/GPL-COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
-    file://include/MIT-COPYING;md5=fea016ce2bdf2ec10080f69e9381d378 "
+    file://include/MIT-COPYING;md5=fea016ce2bdf2ec10080f69e9381d378 \
+"
 
 S = "${WORKDIR}/mmngrbuf"
 

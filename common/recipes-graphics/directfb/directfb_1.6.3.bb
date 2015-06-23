@@ -6,20 +6,21 @@ PR = "${INC_PR}.2"
 DEPENDS += "sysfsutils"
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-SRC_URI += "file://fix-compilation-with-zlib.patch \
-	file://rename-no-instrument-function-macro.patch \
-	file://fixsepbuild.patch \
+SRC_URI += " \
+    file://fix-compilation-with-zlib.patch \
+    file://rename-no-instrument-function-macro.patch \
+    file://fixsepbuild.patch \
 "
 
 EXTRA_OECONF = "\
-	--enable-freetype=yes \
-	--enable-zlib \
-	--with-gfxdrivers=none \
-	--disable-sdl \
-	--disable-vnc \
-	--disable-x11 \
-	--disable-imlib2 \
-	--disable-mesa \
+    --enable-freetype=yes \
+    --enable-zlib \
+    --with-gfxdrivers=none \
+    --disable-sdl \
+    --disable-vnc \
+    --disable-x11 \
+    --disable-imlib2 \
+    --disable-mesa \
 "
 
 LEAD_SONAME = "libdirectfb-1.6.so.0"

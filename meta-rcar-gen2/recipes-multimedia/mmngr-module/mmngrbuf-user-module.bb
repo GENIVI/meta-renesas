@@ -7,7 +7,6 @@ PR = "r0"
 S = "${WORKDIR}/mmngrbuf"
 SRC_URI = "file://mmngrbuf.tar.bz2"
 
-
 do_compile() {
     # Build shared library
     cd ${S}/if

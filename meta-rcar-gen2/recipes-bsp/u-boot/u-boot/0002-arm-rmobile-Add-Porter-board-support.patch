@@ -86,7 +86,7 @@ new file mode 100644
 index 0000000..c5ceada
 --- /dev/null
 +++ b/board/renesas/porter/lowlevel_init.S
-@@ -0,0 +1,71 @@
+@@ -0,0 +1,77 @@
 +/*
 + * board/renesas/porter/lowlevel_init.S
 + *     This file is Porter low level initialize.
@@ -145,6 +145,12 @@ index 0000000..c5ceada
 +	bicne r0, r0, #0xe7
 +	orrne r0, r0, #0x83		/* L2CTLR[7:6] + L2CTLR[2:0] */
 +	mcrne p15, 1, r0, c9, c0, 2
++
++	/* and set l2 auxiliary control */
++	mrcne p15, 1, r0, c15, c0, 0		@ r0 = L2ACTLR
++	orrne r0, r0, #(1<<3)			@ L2ACTLR[3]=1
++	mcrne p15, 1, r0, c15, c0, 0
++
 +_exit_init_l2_a15:
 +	ldr	r3, =(CONFIG_SYS_INIT_SP_ADDR)
 +	sub	sp, r3, #4
@@ -3345,7 +3351,7 @@ new file mode 100644
 index 0000000..45e6556
 --- /dev/null
 +++ b/include/configs/porter.h
-@@ -0,0 +1,206 @@
+@@ -0,0 +1,207 @@
 +/*
 + * include/configs/porter.h
 + *     This file is Porter board configuration.
@@ -3532,6 +3538,7 @@ index 0000000..45e6556
 +/* FS */
 +#define CONFIG_DOS_PARTITION
 +#define CONFIG_SUPPORT_VFAT
++#define CONFIG_NFS_TIMEOUT	10000UL
 +
 +/* USB */
 +#define CONFIG_USB_STORAGE

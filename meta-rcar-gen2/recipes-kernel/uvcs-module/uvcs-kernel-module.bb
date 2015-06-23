@@ -1,7 +1,8 @@
 require ../../include/rcar-gen2-modules-common.inc
 
 LICENSE = "GPLv2&MIT"
-LIC_FILES_CHKSUM = "file://uvcs/include/GPL-COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
+LIC_FILES_CHKSUM = " \
+    file://uvcs/include/GPL-COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
     file://uvcs/include/MIT-COPYING;md5=fea016ce2bdf2ec10080f69e9381d378 \
 "
 DEPENDS = "linux-renesas"
@@ -44,8 +45,8 @@ do_cleansstate_prepend() {
 }
 
 do_clean_source() {
-	rm -f ${KERNELSRC}/include/uvcs_cmn.h ${KERNELSRC}/include/uvcs_types.h
-	rm -f ${KERNELSRC}/include/uvcs.symvers
+    rm -f ${KERNELSRC}/include/uvcs_cmn.h ${KERNELSRC}/include/uvcs_types.h
+    rm -f ${KERNELSRC}/include/uvcs.symvers
 }
 
 PACKAGES = "\

@@ -1,0 +1,52 @@
+From 616feab753972b9751308f3cd2a68fc57eae8edb Mon Sep 17 00:00:00 2001
+From: Fabian Frederick <fabf@skynet.be>
+Date: Wed, 4 Jun 2014 16:11:25 -0700
+Subject: [PATCH] kernel/reboot.c: convert simple_strtoul to kstrtoint
+
+Replace obsolete function.
+kstrtoint is used as reboot_cpu is an integer.
+
+Signed-off-by: Fabian Frederick <fabf@skynet.be>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+---
+ kernel/reboot.c | 21 ++++++++++++++-------
+ 1 file changed, 14 insertions(+), 7 deletions(-)
+
+diff --git a/kernel/reboot.c b/kernel/reboot.c
+index 662c83f..a3a9e24 100644
+--- a/kernel/reboot.c
++++ b/kernel/reboot.c
+@@ -388,15 +388,22 @@ static int __init reboot_setup(char *str)
+ 			break;
+ 
+ 		case 's':
+-			if (isdigit(*(str+1)))
+-				reboot_cpu = simple_strtoul(str+1, NULL, 0);
+-			else if (str[1] == 'm' && str[2] == 'p' &&
+-							isdigit(*(str+3)))
+-				reboot_cpu = simple_strtoul(str+3, NULL, 0);
+-			else
++		{
++			int rc;
++
++			if (isdigit(*(str+1))) {
++				rc = kstrtoint(str+1, 0, &reboot_cpu);
++				if (rc)
++					return rc;
++			} else if (str[1] == 'm' && str[2] == 'p' &&
++				   isdigit(*(str+3))) {
++				rc = kstrtoint(str+3, 0, &reboot_cpu);
++				if (rc)
++					return rc;
++			} else
+ 				reboot_mode = REBOOT_SOFT;
+ 			break;
+-
++		}
+ 		case 'g':
+ 			reboot_mode = REBOOT_GPIO;
+ 			break;
+-- 
+1.9.1
+

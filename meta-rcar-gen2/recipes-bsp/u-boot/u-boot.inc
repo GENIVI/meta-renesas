@@ -8,12 +8,12 @@ inherit deploy
 EXTRA_OEMAKE = 'CROSS_COMPILE=${TARGET_PREFIX} CC="${TARGET_PREFIX}gcc ${TOOLCHAIN_OPTIONS}"'
 
 python () {
-	if not d.getVar("UBOOT_MACHINE", True):
-		PN = d.getVar("PN", True)
-		FILE = os.path.basename(d.getVar("FILE", True))
-		bb.debug(1, "To build %s, see %s for instructions on \
-			     setting up your machine config" % (PN, FILE))
-		raise bb.parse.SkipPackage("UBOOT_MACHINE is not set in the %s machine configuration." % d.getVar("MACHINE", True))
+    if not d.getVar("UBOOT_MACHINE", True):
+        PN = d.getVar("PN", True)
+        FILE = os.path.basename(d.getVar("FILE", True))
+        bb.debug(1, "To build %s, see %s for instructions on \
+            setting up your machine config" % (PN, FILE))
+        raise bb.parse.SkipPackage("UBOOT_MACHINE is not set in the %s machine configuration." % d.getVar("MACHINE", True))
 }
 
 # Some versions of u-boot use .bin and others use .img.  By default use .bin
@@ -38,15 +38,15 @@ SPL_IMAGE ?= "${SPL_BINARY}-${MACHINE}-${PV}-${PR}"
 SPL_SYMLINK ?= "${SPL_BINARY}-${MACHINE}"
 
 do_compile () {
-	if [ "${@base_contains('DISTRO_FEATURES', 'ld-is-gold', 'ld-is-gold', '', d)}" = "ld-is-gold" ] ; then
-		sed -i 's/$(CROSS_COMPILE)ld$/$(CROSS_COMPILE)ld.bfd/g' config.mk
-	fi
+    if [ "${@base_contains('DISTRO_FEATURES', 'ld-is-gold', 'ld-is-gold', '', d)}" = "ld-is-gold" ] ; then
+        sed -i 's/$(CROSS_COMPILE)ld$/$(CROSS_COMPILE)ld.bfd/g' config.mk
+    fi
 
-	unset LDFLAGS
-	unset CFLAGS
-	unset CPPFLAGS
-	oe_runmake ${UBOOT_MACHINE}
-	oe_runmake ${UBOOT_MAKE_TARGET}
+    unset LDFLAGS
+    unset CFLAGS
+    unset CPPFLAGS
+    oe_runmake ${UBOOT_MACHINE}
+    oe_runmake ${UBOOT_MAKE_TARGET}
 }
 
 do_install () {
@@ -59,8 +59,7 @@ do_install () {
         install -m 644 ${WORKDIR}/fw_env.config ${D}${sysconfdir}/fw_env.config
     fi
 
-    if [ "x${SPL_BINARY}" != "x" ]
-    then
+    if [ "x${SPL_BINARY}" != "x" ] ; then
         install ${S}/${SPL_BINARY} ${D}/boot/${SPL_IMAGE}
         ln -sf ${SPL_IMAGE} ${D}/boot/${SPL_BINARY}
     fi
@@ -78,8 +77,7 @@ do_deploy () {
     ln -sf ${UBOOT_IMAGE} ${UBOOT_SYMLINK}
     ln -sf ${UBOOT_IMAGE} ${UBOOT_BINARY}
 
-    if [ "x${SPL_BINARY}" != "x" ]
-    then
+    if [ "x${SPL_BINARY}" != "x" ] ; then
         install ${S}/${SPL_BINARY} ${DEPLOYDIR}/${SPL_IMAGE}
         rm -f ${DEPLOYDIR}/${SPL_BINARY} ${DEPLOYDIR}/${SPL_SYMLINK}
         ln -sf ${SPL_IMAGE} ${DEPLOYDIR}/${SPL_BINARY}
@@ -88,12 +86,12 @@ do_deploy () {
 }
 
 do_deploy_append() {
-	install ${S}/${UBOOT_SREC} ${DEPLOYDIR}/${UBOOT_SREC_IMAGE}
+    install ${S}/${UBOOT_SREC} ${DEPLOYDIR}/${UBOOT_SREC_IMAGE}
 
-	cd ${DEPLOYDIR}
-	rm -f ${UBOOT_SREC} ${UBOOT_SREC_SYMLINK}
-	ln -sf ${UBOOT_SREC_IMAGE} ${UBOOT_SREC}
-	ln -sf ${UBOOT_SREC_IMAGE} ${UBOOT_SREC_SYMLINK}
+    cd ${DEPLOYDIR}
+    rm -f ${UBOOT_SREC} ${UBOOT_SREC_SYMLINK}
+    ln -sf ${UBOOT_SREC_IMAGE} ${UBOOT_SREC}
+    ln -sf ${UBOOT_SREC_IMAGE} ${UBOOT_SREC_SYMLINK}
 }
 
 addtask deploy before do_build after do_compile

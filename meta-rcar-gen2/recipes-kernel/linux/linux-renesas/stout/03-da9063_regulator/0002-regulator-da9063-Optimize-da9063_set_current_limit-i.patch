@@ -1,0 +1,50 @@
+From 556dcf903d8a22aa1b3eb743aeffd4849eef2e24 Mon Sep 17 00:00:00 2001
+From: Axel Lin <axel.lin@ingics.com>
+Date: Fri, 30 Aug 2013 20:07:38 +0800
+Subject: [PATCH] regulator: da9063: Optimize da9063_set_current_limit
+ implementation
+
+All the current limit tables have the values in ascend order.
+So we can slightly optimize the for loop iteration because the first match
+is the minimal value.
+
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
+Signed-off-by: Mark Brown <broonie@linaro.org>
+---
+ drivers/regulator/da9063-regulator.c | 15 ++++-----------
+ 1 file changed, 4 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/regulator/da9063-regulator.c b/drivers/regulator/da9063-regulator.c
+index fc2871cb..f29e729 100644
+--- a/drivers/regulator/da9063-regulator.c
++++ b/drivers/regulator/da9063-regulator.c
+@@ -166,22 +166,15 @@ static int da9063_set_current_limit(struct regulator_dev *rdev,
+ {
+ 	struct da9063_regulator *regl = rdev_get_drvdata(rdev);
+ 	const struct da9063_regulator_info *rinfo = regl->info;
+-	int val = INT_MAX;
+-	unsigned sel = 0;
+-	int n;
+-	int tval;
++	int n, tval;
+ 
+ 	for (n = 0; n < rinfo->n_current_limits; n++) {
+ 		tval = rinfo->current_limits[n];
+-		if (tval >= min_uA && tval <= max_uA && val > tval) {
+-			val = tval;
+-			sel = n;
+-		}
++		if (tval >= min_uA && tval <= max_uA)
++			return regmap_field_write(regl->ilimit, n);
+ 	}
+-	if (val == INT_MAX)
+-		return -EINVAL;
+ 
+-	return regmap_field_write(regl->ilimit, sel);
++	return -EINVAL;
+ }
+ 
+ static int da9063_get_current_limit(struct regulator_dev *rdev)
+-- 
+1.9.1
+

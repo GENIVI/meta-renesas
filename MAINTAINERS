@@ -16,13 +16,13 @@ Maintainers List (try to look for most precise areas first)
 
 		-----------------------------------
 Renesas ARM SoCs R-Car Generation 2
-M:	Nobuhiro Iwamatsu <nobuhiro.iwamatsu.yj@renesas.com>
+M:	Takeshi Saito <takeshi.saito.xv@renesas.com>
 F:	meta-rcar-gen2
 
 Renesas ARM SoCs rmobile
-M:	Nobuhiro Iwamatsu <nobuhiro.iwamatsu.yj@renesas.com>
+M:	Takeshi Saito <takeshi.saito.xv@renesas.com>
 F:	meta-rmobile
 
 COMMON
-M:	Nobuhiro Iwamatsu <nobuhiro.iwamatsu.yj@renesas.com>
+M:	Takeshi Saito <takeshi.saito.xv@renesas.com>
 F:	common/

@@ -25,7 +25,7 @@ do_install() {
 SYSROOT_PREPROCESS_FUNCS += "do_populate_reference_src"
 
 do_populate_reference_src () {
-	sysroot_stage_dir ${D}/usr/local ${SYSROOT_DESTDIR}/usr/local
+    sysroot_stage_dir ${D}/usr/local ${SYSROOT_DESTDIR}/usr/local
 }
 
 PACKAGES = "\

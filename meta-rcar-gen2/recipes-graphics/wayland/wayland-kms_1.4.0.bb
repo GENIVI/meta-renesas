@@ -5,7 +5,7 @@ LIC_FILES_CHKSUM = "file://wayland-kms.c;beginline=6;endline=24;md5=5cdaac262c87
 
 PV_append = "+git${SRCREV}"
 
-SRCREV = "d0c6d621f610d432abeffe3f4a624760bca61d0d"
+SRCREV = "736adecb5a404f9ed4d8b081177ddf81efbc6edb"
 SRC_URI = "git://github.com/thayama/wayland-kms;protocol=git;branch=master"
 
 COMPATIBLE_MACHINE = "(r8a7790|r8a7791|r8a7793|r8a7794)"
@@ -16,6 +16,7 @@ inherit autotools pkgconfig
 
 FILES_${PN} = "${libdir}/libwayland-kms.so.*"
 FILES_${PN}-dev = "${libdir}/libwayland-kms.la \
-        ${libdir}/libwayland-kms.so ${libdir}/pkgconfig/* \
-        ${includedir}/*"
+    ${libdir}/libwayland-kms.so ${libdir}/pkgconfig/* \
+    ${includedir}/* \
+"
 FILES_${PN}-staticdev += "${libdir}/libwayland-kms.a"

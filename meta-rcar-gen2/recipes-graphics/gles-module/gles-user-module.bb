@@ -22,27 +22,27 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
 OPENGLES3 ?= "0"
 SRC_URI_r8a7790 = '${@base_conditional( "OPENGLES3", "1", \
-        "file://r8a7790_linux_rgx_binaries_gles3.tar.bz2", \
-        "file://r8a7790_linux_rgx_binaries_gles2.tar.bz2", d )}'
+    "file://r8a7790_linux_rgx_binaries_gles3.tar.bz2", \
+    "file://r8a7790_linux_rgx_binaries_gles2.tar.bz2", d )}'
 SRC_URI_append_r8a7790 = " ${@base_contains("DISTRO_FEATURES", "wayland", " \
-        file://EGL_headers_for_wayland.patch \
-        file://change-shell.patch \
-        ", "", d)}"
+    file://EGL_headers_for_wayland.patch \
+    file://change-shell.patch \
+    ", "", d)}"
 
 SRC_URI_r8a7791 = "file://r8a7791_linux_sgx_binaries_gles2.tar.bz2"
 SRC_URI_append_r8a7791 = " ${@base_contains("DISTRO_FEATURES", "wayland", " \
-        file://EGL_headers_for_wayland.patch \
-        ", "", d)}"
+    file://EGL_headers_for_wayland.patch \
+    ", "", d)}"
 
 SRC_URI_r8a7793 = "file://r8a7791_linux_sgx_binaries_gles2.tar.bz2"
 SRC_URI_append_r8a7793 = " ${@base_contains("DISTRO_FEATURES", "wayland", " \
-        file://EGL_headers_for_wayland.patch \
-        ", "", d)}"
+    file://EGL_headers_for_wayland.patch \
+    ", "", d)}"
 
 SRC_URI_r8a7794 = "file://r8a7794_linux_sgx_binaries_gles2.tar.bz2"
 SRC_URI_append_r8a7794 = " ${@base_contains("DISTRO_FEATURES", "wayland", " \
-        file://EGL_headers_for_wayland.patch \
-        ", "", d)}"
+    file://EGL_headers_for_wayland.patch \
+    ", "", d)}"
 
 do_populate_lic[noexec] = "1"
 do_compile[noexec] = "1"
@@ -58,14 +58,14 @@ do_install() {
 
         # Set the "WindowSystem" parameter for wayland
         if [ "${GLES}" = "rgx" ]; then
-           sed -i -e "s/WindowSystem=libpvrNULL_WSEGL.so/WindowSystem=libpvrWAYLAND_WSEGL.so/g" \
-           ${D}/${sysconfdir}/powervr.ini
+            sed -i -e "s/WindowSystem=libpvrNULL_WSEGL.so/WindowSystem=libpvrWAYLAND_WSEGL.so/g" \
+            ${D}/${sysconfdir}/powervr.ini
         elif [ "${GLES}" = "sgx" ]; then
-           sed -i -e "s/WindowSystem=libpvrPVR2D_FLIPWSEGL.so/WindowSystem=libpvrPVR2D_WAYLANDWSEGL.so/g" \
-           ${D}/${sysconfdir}/powervr.ini
+            sed -i -e "s/WindowSystem=libpvrPVR2D_FLIPWSEGL.so/WindowSystem=libpvrPVR2D_WAYLANDWSEGL.so/g" \
+            ${D}/${sysconfdir}/powervr.ini
         fi
     fi
-} 
+}
 
 PACKAGES = "\
     ${PN} \

@@ -3,7 +3,7 @@ OpenEmbedded/Yocto BSP layer for Renesas Electronics's SoCs
 This layer provides support for Renesas Electronics's platforms for use with
 OpenEmbedded and/or Yocto.
 
-Layer maintainers: Nobuhiro Iwamatsu <nobuhiro.iwamatsu.yj@renesas.com>
+Layer maintainers: Takeshi Saito <takeshi.saito.xv@renesas.com>
 
 Supported Boards/Machines
 =========================

@@ -20,6 +20,6 @@ DEPENDS = "libuiomux libshmeram"
 EXTRA_OECONF = "--enable-meram"
 
 do_configure() {
-	autoreconf -ivf ${S}
-	oe_runconf
+    autoreconf -ivf ${S}
+    oe_runconf
 }

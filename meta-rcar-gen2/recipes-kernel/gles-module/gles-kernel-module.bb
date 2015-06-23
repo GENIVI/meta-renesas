@@ -1,7 +1,9 @@
 DESCRIPTION = "RGX/SGX kernel module"
 LICENSE = "GPLv2&MIT"
-LIC_FILES_CHKSUM = "file://GPL-COPYING;md5=60422928ba677faaa13d6ab5f5baaa1e \
-                    file://MIT-COPYING;md5=8c2810fa6bfdc5ae5c15a0c1ade34054"
+LIC_FILES_CHKSUM = " \
+    file://GPL-COPYING;md5=60422928ba677faaa13d6ab5f5baaa1e \
+    file://MIT-COPYING;md5=8c2810fa6bfdc5ae5c15a0c1ade34054 \
+"
 DEPENDS = "linux-renesas"
 PN = "gles-kernel-module"
 PR = "r0"
@@ -80,7 +82,7 @@ do_install() {
 }
 
 do_clean_source() {
-	rm -Rf ${KERNELSRC}/include/${GLES}.symvers
+    rm -Rf ${KERNELSRC}/include/${GLES}.symvers
 }
 
 ALLOW_EMPTY_kernel-module-bc-example = "1"

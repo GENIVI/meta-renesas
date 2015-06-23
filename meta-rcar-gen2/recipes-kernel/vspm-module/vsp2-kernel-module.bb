@@ -2,8 +2,8 @@ require ../../include/rcar-gen2-modules-common.inc
 
 LICENSE = "GPLv2&MIT"
 LIC_FILES_CHKSUM = " \
-	file://GPL-COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
-	file://MIT-COPYING;md5=fea016ce2bdf2ec10080f69e9381d378 \
+    file://GPL-COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
+    file://MIT-COPYING;md5=fea016ce2bdf2ec10080f69e9381d378 \
 "
 
 DEPENDS = "linux-renesas vspm-kernel-module"
@@ -12,12 +12,13 @@ PR = "r0"
 
 SRCREV = "8cc362a6c961661e4655904f8d7731e501529d6c"
 SRC_URI = " \
-	git://github.com/renesas-devel/vsp2driver.git;protocol=git;branch=RCAR-GEN2/1.0.0 \
-	file://vsp2drv-init \
+    git://github.com/renesas-devel/vsp2driver.git;protocol=git;branch=RCAR-GEN2/1.0.0 \
+    file://vsp2drv-init \
 "
 S = "${WORKDIR}/git"
 
 do_configure[noexec] = "1"
+
 do_compile() {
     export VSP2_VSPMDIR=${KERNELSRC}/include
     export VSP2_VSPMSYMVERS=vspm.symvers
@@ -52,7 +53,7 @@ FILES_${PN} = " \
 "
 
 FILES_${PN}-dev = " \
-  /usr/src/kernel/include/vsp2.symvers \
+    /usr/src/kernel/include/vsp2.symvers \
 "
 RPROVIDES_${PN} += "vsp2-kernel-module"
 INHIBIT_PACKAGE_DEBUG_SPLIT = "1"

@@ -1,0 +1,120 @@
+From d706b1e4930fec12cc3b8d6e0e28d9e8321abcea Mon Sep 17 00:00:00 2001
+From: Axel Lin <axel.lin@ingics.com>
+Date: Wed, 16 Oct 2013 17:33:59 +0800
+Subject: [PATCH] regulator: da9052: Revert se apply_[reg|bit] with regmap
+ based voltage_sel operations
+
+This reverts commit 68f7506017ba67f1334cf086ffab76606f2c5ac4.
+
+Michael reported that with this patch we loose the fix_io code path from
+da9052_reg_update. Thus revert it.
+
+Reported-by: Michael Grzeschik <mgr@pengutronix.de>
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
+Signed-off-by: Mark Brown <broonie@linaro.org>
+---
+ drivers/regulator/da9052-regulator.c | 41 ++++++++++++++++++++++++++++++------
+ 1 file changed, 35 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/regulator/da9052-regulator.c b/drivers/regulator/da9052-regulator.c
+index 1e4d483..e4bbe64 100644
+--- a/drivers/regulator/da9052-regulator.c
++++ b/drivers/regulator/da9052-regulator.c
+@@ -70,6 +70,7 @@ struct da9052_regulator_info {
+ 	int step_uV;
+ 	int min_uV;
+ 	int max_uV;
++	unsigned char activate_bit;
+ };
+ 
+ struct da9052_regulator {
+@@ -209,6 +210,36 @@ static int da9052_map_voltage(struct regulator_dev *rdev,
+ 	return sel;
+ }
+ 
++static int da9052_regulator_set_voltage_sel(struct regulator_dev *rdev,
++					    unsigned int selector)
++{
++	struct da9052_regulator *regulator = rdev_get_drvdata(rdev);
++	struct da9052_regulator_info *info = regulator->info;
++	int id = rdev_get_id(rdev);
++	int ret;
++
++	ret = da9052_reg_update(regulator->da9052, rdev->desc->vsel_reg,
++				rdev->desc->vsel_mask, selector);
++	if (ret < 0)
++		return ret;
++
++	/* Some LDOs and DCDCs are DVC controlled which requires enabling of
++	 * the activate bit to implment the changes on the output.
++	 */
++	switch (id) {
++	case DA9052_ID_BUCK1:
++	case DA9052_ID_BUCK2:
++	case DA9052_ID_BUCK3:
++	case DA9052_ID_LDO2:
++	case DA9052_ID_LDO3:
++		ret = da9052_reg_update(regulator->da9052, DA9052_SUPPLY_REG,
++					info->activate_bit, info->activate_bit);
++		break;
++	}
++
++	return ret;
++}
++
+ static struct regulator_ops da9052_dcdc_ops = {
+ 	.get_current_limit = da9052_dcdc_get_current_limit,
+ 	.set_current_limit = da9052_dcdc_set_current_limit,
+@@ -216,7 +247,7 @@ static struct regulator_ops da9052_dcdc_ops = {
+ 	.list_voltage = da9052_list_voltage,
+ 	.map_voltage = da9052_map_voltage,
+ 	.get_voltage_sel = regulator_get_voltage_sel_regmap,
+-	.set_voltage_sel = regulator_set_voltage_sel_regmap,
++	.set_voltage_sel = da9052_regulator_set_voltage_sel,
+ 	.is_enabled = regulator_is_enabled_regmap,
+ 	.enable = regulator_enable_regmap,
+ 	.disable = regulator_disable_regmap,
+@@ -226,7 +257,7 @@ static struct regulator_ops da9052_ldo_ops = {
+ 	.list_voltage = da9052_list_voltage,
+ 	.map_voltage = da9052_map_voltage,
+ 	.get_voltage_sel = regulator_get_voltage_sel_regmap,
+-	.set_voltage_sel = regulator_set_voltage_sel_regmap,
++	.set_voltage_sel = da9052_regulator_set_voltage_sel,
+ 	.is_enabled = regulator_is_enabled_regmap,
+ 	.enable = regulator_enable_regmap,
+ 	.disable = regulator_disable_regmap,
+@@ -243,14 +274,13 @@ static struct regulator_ops da9052_ldo_ops = {
+ 		.owner = THIS_MODULE,\
+ 		.vsel_reg = DA9052_BUCKCORE_REG + DA9052_ID_##_id, \
+ 		.vsel_mask = (1 << (sbits)) - 1,\
+-		.apply_reg = DA9052_SUPPLY_REG, \
+-		.apply_bit = (abits), \
+ 		.enable_reg = DA9052_BUCKCORE_REG + DA9052_ID_##_id, \
+ 		.enable_mask = 1 << (ebits),\
+ 	},\
+ 	.min_uV = (min) * 1000,\
+ 	.max_uV = (max) * 1000,\
+ 	.step_uV = (step) * 1000,\
++	.activate_bit = (abits),\
+ }
+ 
+ #define DA9052_DCDC(_id, step, min, max, sbits, ebits, abits) \
+@@ -264,14 +294,13 @@ static struct regulator_ops da9052_ldo_ops = {
+ 		.owner = THIS_MODULE,\
+ 		.vsel_reg = DA9052_BUCKCORE_REG + DA9052_ID_##_id, \
+ 		.vsel_mask = (1 << (sbits)) - 1,\
+-		.apply_reg = DA9052_SUPPLY_REG, \
+-		.apply_bit = (abits), \
+ 		.enable_reg = DA9052_BUCKCORE_REG + DA9052_ID_##_id, \
+ 		.enable_mask = 1 << (ebits),\
+ 	},\
+ 	.min_uV = (min) * 1000,\
+ 	.max_uV = (max) * 1000,\
+ 	.step_uV = (step) * 1000,\
++	.activate_bit = (abits),\
+ }
+ 
+ static struct da9052_regulator_info da9052_regulator_info[] = {
+-- 
+1.9.1
+
