@@ -1,0 +1,26 @@
+From f431adce84156d9ff395a389ac31c47749311de2 Mon Sep 17 00:00:00 2001
+From: Takeshi Saito <takeshi.saito.xv@renesas.com>
+Date: Tue, 16 Jun 2015 10:59:19 +0900
+Subject: [PATCH] arm: shmobile: gose: Add 'vmalloc=384M' to bootargs of DTS
+
+Signed-off-by: Takeshi Saito <takeshi.saito.xv@renesas.com>
+---
+ arch/arm/boot/dts/r8a7793-gose.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/r8a7793-gose.dts b/arch/arm/boot/dts/r8a7793-gose.dts
+index 426d04d..a9e96be 100644
+--- a/arch/arm/boot/dts/r8a7793-gose.dts
++++ b/arch/arm/boot/dts/r8a7793-gose.dts
+@@ -42,7 +42,7 @@
+ 	};
+ 
+ 	chosen {
+-		bootargs = "console=ttySC6,38400 ignore_loglevel rw root=/dev/nfs ip=dhcp";
++		bootargs = "console=ttySC6,38400 ignore_loglevel rw root=/dev/nfs ip=dhcp vmalloc=384M";
+ 	};
+ 
+ 	memory@40000000 {
+-- 
+1.9.1
+

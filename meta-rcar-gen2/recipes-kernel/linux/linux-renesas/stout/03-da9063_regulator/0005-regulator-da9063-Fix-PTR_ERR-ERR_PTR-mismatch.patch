@@ -1,0 +1,39 @@
+From e8cb204c675e05105ab2c93c73c57607e09d6b41 Mon Sep 17 00:00:00 2001
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 9 Sep 2013 13:49:26 +0200
+Subject: [PATCH] regulator: da9063: Fix PTR_ERR/ERR_PTR mismatch
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+If CONFIG_OF=n:
+
+drivers/regulator/da9063-regulator.c: In function ‘da9063_parse_regulators_dt’:
+drivers/regulator/da9063-regulator.c:712: warning: passing argument 1 of ‘PTR_ERR’ makes pointer from integer without a cast
+drivers/regulator/da9063-regulator.c:712: warning: return makes pointer from integer without a cast
+
+Use ERR_PTR() to encode an error code in a pointer.
+PTR_ERR() is meant to decode an error code from a pointer.
+
+Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Signed-off-by: Mark Brown <broonie@linaro.org>
+---
+ drivers/regulator/da9063-regulator.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/regulator/da9063-regulator.c b/drivers/regulator/da9063-regulator.c
+index 1a78163..b9f2653 100644
+--- a/drivers/regulator/da9063-regulator.c
++++ b/drivers/regulator/da9063-regulator.c
+@@ -709,7 +709,7 @@ static struct da9063_regulators_pdata *da9063_parse_regulators_dt(
+ 		struct of_regulator_match **da9063_reg_matches)
+ {
+ 	da9063_reg_matches = NULL;
+-	return PTR_ERR(-ENODEV);
++	return ERR_PTR(-ENODEV);
+ }
+ #endif
+ 
+-- 
+1.9.1
+

@@ -1,0 +1,173 @@
+Proprietary libraries for meta-rcar-gen2
+========================================
+
+The meta-rcar-gen2 of meta-renesas is supported GLES(RGX and SGX) libraries
+for x11 and Weston, and proprietary library of multimedia. This README describes
+how to use these features and setting to local.conf.
+There are 4 main paths:
+	I/ Board configuration
+	II/ Build with or without GLES
+	III/ Build with Renesas multimedia libraries
+	IV/ Configuration for unmasking packages
+
+The default package is without GLES and including multimedia feature with H264 decoder.
+Therefore, please check section II to config for GLES,
+And check section III for configuration of optional multimedia packages.
+
+In addition, these binaries are not provided at the recipes. If you want to use,
+you will need to get from Renesas.
+
+I/ Board configuration
+==================
+* Please add this line to local.conf depending on your board
+	A. For Lager board
+		   MACHINE ??= "lager"
+	B. For Koelsch board
+		   MACHINE ??= "koelsch"
+	C. For Gose board
+		   MACHINE ??= "gose"
+	D. For Alt board
+		   MACHINE ??= "alt"
+
+II/ Build with or without GLES
+==================
+	A/ Build with GLES
+		* For wayland with rgx/sgx
+
+		1. Please copy proprietary libraries to the directory of recipes.
+		2. Please set local.conf the following.
+			Step 1: Adding features and preferred providers:
+
+			   MACHINE_FEATURES_append = " sgx"
+			   MULTI_PROVIDER_WHITELIST += "virtual/libgl virtual/egl virtual/libgles1 virtual/libgles2"
+			   PREFERRED_PROVIDER_virtual/libgles1 = ""
+			   PREFERRED_PROVIDER_virtual/libgles2 = "gles-user-module"
+			   PREFERRED_PROVIDER_virtual/egl = "libegl"
+			   PREFERRED_PROVIDER_virtual/libgl = ""
+			   PREFERRED_PROVIDER_virtual/mesa = ""
+			   PREFERRED_PROVIDER_libgbm = "libgbm"
+			   PREFERRED_PROVIDER_libgbm-dev = "libgbm"
+
+			 NOTE: The r8a7790 uses rgx, r8a7791, r8a7793 and r8a7794 uses sgx.
+				   If you want to use rgx, please set to 'rgx' instead of 'sgx'.
+				   For r8a7790, if you want to use OPENGLES3,
+				   Please set following in local.conf (default is OPENGLES2)
+					  OPENGLES3 = "1"
+			Step 2: Unmask the graphic recipes
+
+				#BBMASK .= "|gles-kernel-module|gles-user-module"
+
+		  3. Please run 'bitbake core-image-weston'
+
+		* For X11 with rgx/sgx
+		1. Please copy proprietary libraries to the directory of recipes.
+		2. Please set local.conf the following.
+			Step 1: Adding features and preferred providers:
+
+			   MACHINE_FEATURES_append = " sgx"
+			   MULTI_PROVIDER_WHITELIST += "virtual/libgl virtual/egl virtual/libgles1 virtual/libgles2"
+			   PREFERRED_PROVIDER_virtual/libgles2 = "gles-user-module"
+			   PREFERRED_PROVIDER_virtual/egl = "gles-user-module"
+			   DISTRO_FEATURES_remove = "wayland"
+			   BBMASK .= "|libegl|libgbm|wayland-kms"
+
+			 NOTE: The r8a7790 uses rgx, r8a7791, r8a7793 and r8a7794 uses sgx.
+				   If you want to use rgx, please set to 'rgx' instead of 'sgx'.
+				   For r8a7790, if you want to use OPENGLES3,
+				   Please set following in local.conf (default is OPENGLES2)
+					  OPENGLES3 = "1"
+			Step 2: Unmask the graphic recipes
+
+				#BBMASK .= "|gles-kernel-module|gles-user-module"
+
+		  3. Please run 'bitbake core-image-x11'
+
+	B/ Build without GLES
+		* For X11 without rgx/sgx
+		1. Please copy proprietary libraries to the directory of recipes.
+		2. Please set local.conf the following.
+
+			  DISTRO_FEATURES_remove = "wayland"
+			  BBMASK .= "|libegl|libgbm|wayland-kms"
+
+		If you need to install multimedia packages.
+		Please check section of 'Build with Renesas multimedia libraries'.
+
+III/ Build with Renesas multimedia libraries
+============================================
+	A/ Configuration for Multimedia and DTV features
+		1. Please copy proprietary libraries to the directory of recipes.
+		2. Please set local.conf the following.
+
+			# For multimedia feature
+			This provides package group of plug-ins of the GStreamer, multimedia
+			libraries and kernel drivers.
+
+				MACHINE_FEATURES_append = " multimedia"
+
+			# For DTV feature
+		    This provides package group of dtv libraries with packagegroup-rcar-gen2-multimedia.
+			Step 1 : Adding MACHINE_FEATURES
+
+				MACHINE_FEATURES_append = " dtv"
+
+			Step 2: Unmask dtv recipes
+
+				#BBMASK .= "|dtv-module|ssp-module|scu-module"
+
+	B/ Configuration for optional codecs and middleware
+		1. Please copy proprietary libraries to the directory of recipes.
+		2. Add features to DISTRO_FEATURES_append to local.conf
+			# Additional configuration in OMX module
+			" h263dec_lib"    - for OMX Media Component H263 Decoder Library
+			" vc1dec_lib"     - for OMX Media Component VC-1 Decoder Library
+			" mpeg4dec_lib"   - for OMX Media Component MPEG-4 Decoder Library
+			" mpeg2dec_lib"   - for VCP3 Driver Adapted for Linux MPEG-2 Decoder Library
+			" divxdec_lib"    - for DivX Decoder Library for Linux
+			" h264avcenc_lib" - for Encoder Library for Linux
+
+			# Configuration for audio decoders
+			" aacp2dec_lib"   - for ARM 5.1ch aacPlus V2 Decoder for Linux
+			" mp3dec_lib"     - for ARM MP3 Decoder for Linux
+			" wmadec_lib"     - for ARM WMA Decoder for Linux
+			" ddddec_lib"     - for ARM 5.1ch Dolby Digital Decoder for Linux
+			" alacdec_lib"    - for ARM ALAC Decoder for Linux
+			" flacdec_lib"    - for ARM FLAC Decoder for Linux
+			" aaclcsdec_lib"  - for ARM AAC-LC Decoder Sample for Linux
+			" aacenc_lib"     - for ARM AAC Encoder for Linux
+
+			# Configuration for audio middlewares
+			" armaccp2dec_mdw"  - for ARM 5.1ch aacPlus V2 Decode Middleware for Linux
+			" mp3dec_mdw"       - for ARM MP3 Decode Middleware for Linux
+			" wmadec_mdw"       - for ARM WMA Decode Middleware for Linux
+			" ddddec_mdw"       - for ARM 5.1ch Dolby Digital Decode Middleware for Linux
+			" alacdec_mdw"      - for ARM ALAC Decode Middleware for Linux
+			" flacdec_mdw"      - for ARM FLAC Decode Middleware for Linux
+			" aacsdec_mdw"      - for ARM AAC-LC Decode Middleware for Linux
+			" aacenc_mdw"       - for ARM AAC Encode Middleware for Linux
+		Ex:
+
+				DISTRO_FEATURES_append = " mp3dec_lib wmadec_lib mp3dec_mdw wmadec_mdw"
+
+	C/ Configuration for test packages
+		1. Please copy proprietary libraries to the directory of recipes.
+		2. Add features to DISTRO_FEATURES_append to local.conf
+
+			# Configuration for multimedia test package
+			Step 1 : Adding DISTRO_FEATURES
+
+				DISTRO_FEATURES_append = " mm-test"
+
+			Step 2: Unmask multimedia test recipes
+
+				#BBMASK .= "|${BB_MULTIMEDIA_TEST_MODULE}"
+
+			# Configuration for gles test package
+			This test app ONLY supports X11 environment.
+			Step 1 : Adding DISTRO_FEATURES
+
+				DISTRO_FEATURES_append = " gles-test"
+
+			Step 2: Unmask gles test recipes
+
+				#BBMASK .= "|gles-test-module"

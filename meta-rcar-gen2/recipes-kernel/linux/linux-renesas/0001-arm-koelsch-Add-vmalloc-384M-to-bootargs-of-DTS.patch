@@ -1,0 +1,26 @@
+From 3675f552482ba6ec76313cf99f588583ebc2081c Mon Sep 17 00:00:00 2001
+From: Takeshi Saito <takeshi.saito.xv@renesas.com>
+Date: Tue, 16 Jun 2015 11:00:23 +0900
+Subject: [PATCH] arm: shmobile: koelsch: Add 'vmalloc=384M' to bootargs of DTS
+
+Signed-off-by: Takeshi Saito <takeshi.saito.xv@renesas.com>
+---
+ arch/arm/boot/dts/r8a7791-koelsch.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/r8a7791-koelsch.dts b/arch/arm/boot/dts/r8a7791-koelsch.dts
+index eafac9a..65cb25e 100644
+--- a/arch/arm/boot/dts/r8a7791-koelsch.dts
++++ b/arch/arm/boot/dts/r8a7791-koelsch.dts
+@@ -45,7 +45,7 @@
+ 	};
+ 
+ 	chosen {
+-		bootargs = "console=ttySC6,38400 ignore_loglevel rw root=/dev/nfs ip=dhcp";
++		bootargs = "console=ttySC6,38400 ignore_loglevel rw root=/dev/nfs ip=dhcp vmalloc=384M";
+ 	};
+ 
+ 	memory@40000000 {
+-- 
+1.9.1
+

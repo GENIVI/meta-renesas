@@ -1,0 +1,36 @@
+From f377ed107b031fb0e67fa4a1d1096ab1c7818a84 Mon Sep 17 00:00:00 2001
+From: Colin Ian King <colin.king@canonical.com>
+Date: Tue, 11 Mar 2014 11:25:09 +0000
+Subject: [PATCH] regulator: da9063: fix assignment of da9063_reg_matches to
+ NULL
+
+cppcheck detected an incorrect assignment:
+
+ drivers/regulator/da9063-regulator.c:711]: (warning) Assignment
+ of function parameter has no effect outside the function
+
+the original code didn't do anything, instead, *da9063_reg_matches
+needs to be set to NULL.
+
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Mark Brown <broonie@linaro.org>
+---
+ drivers/regulator/da9063-regulator.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/regulator/da9063-regulator.c b/drivers/regulator/da9063-regulator.c
+index 4c09f75..6027bd5 100644
+--- a/drivers/regulator/da9063-regulator.c
++++ b/drivers/regulator/da9063-regulator.c
+@@ -709,7 +709,7 @@ static struct da9063_regulators_pdata *da9063_parse_regulators_dt(
+ 		struct platform_device *pdev,
+ 		struct of_regulator_match **da9063_reg_matches)
+ {
+-	da9063_reg_matches = NULL;
++	*da9063_reg_matches = NULL;
+ 	return ERR_PTR(-ENODEV);
+ }
+ #endif
+-- 
+1.9.1
+

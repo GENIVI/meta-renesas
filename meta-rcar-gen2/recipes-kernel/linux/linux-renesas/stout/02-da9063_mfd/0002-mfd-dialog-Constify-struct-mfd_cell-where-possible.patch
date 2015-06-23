@@ -1,0 +1,60 @@
+From c8f675ff378b95eb6bf38de316e1b82339c44042 Mon Sep 17 00:00:00 2001
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 18 Nov 2013 14:32:57 +0100
+Subject: [PATCH] mfd: dialog: Constify struct mfd_cell where possible
+
+As of commit 03e361b25ee8dfb1fd9b890072c23c4aae01c6c7 ("mfd: Stop setting
+refcounting pointers in original mfd_cell arrays"), the "cell" parameter of
+mfd_add_devices() is "const" again. Hence make all cell data passed to
+mfd_add_devices() const where possible.
+
+Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
+---
+ drivers/mfd/da9052-core.c | 2 +-
+ drivers/mfd/da9055-core.c | 2 +-
+ drivers/mfd/da9063-core.c | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/mfd/da9052-core.c b/drivers/mfd/da9052-core.c
+index ea28a33..25838f1 100644
+--- a/drivers/mfd/da9052-core.c
++++ b/drivers/mfd/da9052-core.c
+@@ -427,7 +427,7 @@ int da9052_adc_read_temp(struct da9052 *da9052)
+ }
+ EXPORT_SYMBOL_GPL(da9052_adc_read_temp);
+ 
+-static struct mfd_cell da9052_subdev_info[] = {
++static const struct mfd_cell da9052_subdev_info[] = {
+ 	{
+ 		.name = "da9052-regulator",
+ 		.id = 1,
+diff --git a/drivers/mfd/da9055-core.c b/drivers/mfd/da9055-core.c
+index d3670cd..caf8dcf 100644
+--- a/drivers/mfd/da9055-core.c
++++ b/drivers/mfd/da9055-core.c
+@@ -294,7 +294,7 @@ static struct resource da9055_ld05_6_resource = {
+ 	.flags = IORESOURCE_IRQ,
+ };
+ 
+-static struct mfd_cell da9055_devs[] = {
++static const struct mfd_cell da9055_devs[] = {
+ 	{
+ 		.of_compatible = "dialog,da9055-gpio",
+ 		.name = "da9055-gpio",
+diff --git a/drivers/mfd/da9063-core.c b/drivers/mfd/da9063-core.c
+index c9cf8d9..26937cd 100644
+--- a/drivers/mfd/da9063-core.c
++++ b/drivers/mfd/da9063-core.c
+@@ -75,7 +75,7 @@ static struct resource da9063_hwmon_resources[] = {
+ };
+ 
+ 
+-static struct mfd_cell da9063_devs[] = {
++static const struct mfd_cell da9063_devs[] = {
+ 	{
+ 		.name		= DA9063_DRVNAME_REGULATORS,
+ 		.num_resources	= ARRAY_SIZE(da9063_regulators_resources),
+-- 
+1.9.1
+

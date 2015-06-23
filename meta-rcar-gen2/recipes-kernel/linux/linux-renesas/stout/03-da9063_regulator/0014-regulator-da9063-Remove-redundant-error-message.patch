@@ -1,0 +1,32 @@
+From 8b5baa56f27369af57a755e364d02c02efed611b Mon Sep 17 00:00:00 2001
+From: Sachin Kamat <sachin.kamat@linaro.org>
+Date: Thu, 20 Feb 2014 14:23:01 +0530
+Subject: [PATCH] regulator: da9063: Remove redundant error message
+
+kzalloc prints its own OOM message upon failure.
+
+Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
+Signed-off-by: Mark Brown <broonie@linaro.org>
+---
+ drivers/regulator/da9063-regulator.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/drivers/regulator/da9063-regulator.c b/drivers/regulator/da9063-regulator.c
+index 3c65644..4c09f75 100644
+--- a/drivers/regulator/da9063-regulator.c
++++ b/drivers/regulator/da9063-regulator.c
+@@ -774,10 +774,8 @@ static int da9063_regulator_probe(struct platform_device *pdev)
+ 	size = sizeof(struct da9063_regulators) +
+ 		n_regulators * sizeof(struct da9063_regulator);
+ 	regulators = devm_kzalloc(&pdev->dev, size, GFP_KERNEL);
+-	if (!regulators) {
+-		dev_err(&pdev->dev, "No memory for regulators\n");
++	if (!regulators)
+ 		return -ENOMEM;
+-	}
+ 
+ 	regulators->n_regulators = n_regulators;
+ 	platform_set_drvdata(pdev, regulators);
+-- 
+1.9.1
+

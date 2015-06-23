@@ -1,0 +1,109 @@
+From 16d6d5b00ee75307bab7e4ede9452c97b28f30e2 Mon Sep 17 00:00:00 2001
+From: Robin Holt <holt@sgi.com>
+Date: Mon, 8 Jul 2013 16:01:39 -0700
+Subject: [PATCH] reboot: arm: prepare reboot_mode for moving to generic kernel
+ code
+
+Prepare for the moving the parsing of reboot= to the generic kernel code
+by making reboot_mode into a more generic form.
+
+Signed-off-by: Robin Holt <holt@sgi.com>
+Cc: Russell King <rmk+kernel@arm.linux.org.uk>
+Cc: Russ Anderson <rja@sgi.com>
+Cc: Robin Holt <holt@sgi.com>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Guan Xuetao <gxt@mprc.pku.edu.cn>
+Acked-by: Russell King <rmk+kernel@arm.linux.org.uk>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+---
+ arch/arm/include/asm/mach/arch.h   | 3 ++-
+ arch/arm/kernel/process.c          | 8 ++++----
+ arch/arm/kernel/setup.c            | 6 +++---
+ arch/arm/mach-footbridge/cats-hw.c | 2 +-
+ 4 files changed, 10 insertions(+), 9 deletions(-)
+
+diff --git a/arch/arm/include/asm/mach/arch.h b/arch/arm/include/asm/mach/arch.h
+index 75bf079..fdf62b4 100644
+--- a/arch/arm/include/asm/mach/arch.h
++++ b/arch/arm/include/asm/mach/arch.h
+@@ -11,6 +11,7 @@
+  */
+ 
+ #ifndef __ASSEMBLY__
++#include <linux/reboot.h>
+ 
+ struct tag;
+ struct meminfo;
+@@ -43,7 +44,7 @@ struct machine_desc {
+ 	unsigned char		reserve_lp0 :1;	/* never has lp0	*/
+ 	unsigned char		reserve_lp1 :1;	/* never has lp1	*/
+ 	unsigned char		reserve_lp2 :1;	/* never has lp2	*/
+-	char			restart_mode;	/* default restart mode	*/
++	enum reboot_mode	reboot_mode;	/* default restart mode	*/
+ 	struct smp_operations	*smp;		/* SMP operations	*/
+ 	void			(*fixup)(struct tag *, char **,
+ 					 struct meminfo *);
+diff --git a/arch/arm/kernel/process.c b/arch/arm/kernel/process.c
+index 7f1efcd..2d54406 100644
+--- a/arch/arm/kernel/process.c
++++ b/arch/arm/kernel/process.c
+@@ -175,14 +175,14 @@ void arch_cpu_idle(void)
+ 		default_idle();
+ }
+ 
+-static char reboot_mode = 'h';
++enum reboot_mode reboot_mode = REBOOT_HARD;
+ 
+-int __init reboot_setup(char *str)
++static int __init reboot_setup(char *str)
+ {
+-	reboot_mode = str[0];
++	if ('s' == str[0])
++		reboot_mode = REBOOT_SOFT;
+ 	return 1;
+ }
+-
+ __setup("reboot=", reboot_setup);
+ 
+ /*
+diff --git a/arch/arm/kernel/setup.c b/arch/arm/kernel/setup.c
+index 9b65327..63af9a7 100644
+--- a/arch/arm/kernel/setup.c
++++ b/arch/arm/kernel/setup.c
+@@ -74,7 +74,7 @@ __setup("fpe=", fpe_setup);
+ 
+ extern void paging_init(struct machine_desc *desc);
+ extern void sanity_check_meminfo(void);
+-extern void reboot_setup(char *str);
++extern enum reboot_mode reboot_mode;
+ extern void setup_dma_zone(struct machine_desc *desc);
+ 
+ unsigned int processor_id;
+@@ -861,8 +861,8 @@ void __init setup_arch(char **cmdline_p)
+ 
+ 	setup_dma_zone(mdesc);
+ 
+-	if (mdesc->restart_mode)
+-		reboot_setup(&mdesc->restart_mode);
++	if (mdesc->reboot_mode != REBOOT_HARD)
++		reboot_mode = mdesc->reboot_mode;
+ 
+ 	init_mm.start_code = (unsigned long) _text;
+ 	init_mm.end_code   = (unsigned long) _etext;
+diff --git a/arch/arm/mach-footbridge/cats-hw.c b/arch/arm/mach-footbridge/cats-hw.c
+index 6987a09..9669cc0 100644
+--- a/arch/arm/mach-footbridge/cats-hw.c
++++ b/arch/arm/mach-footbridge/cats-hw.c
+@@ -86,7 +86,7 @@ fixup_cats(struct tag *tags, char **cmdline, struct meminfo *mi)
+ MACHINE_START(CATS, "Chalice-CATS")
+ 	/* Maintainer: Philip Blundell */
+ 	.atag_offset	= 0x100,
+-	.restart_mode	= 's',
++	.reboot_mode	= REBOOT_SOFT,
+ 	.fixup		= fixup_cats,
+ 	.map_io		= footbridge_map_io,
+ 	.init_irq	= footbridge_init_irq,
+-- 
+1.9.1
+
