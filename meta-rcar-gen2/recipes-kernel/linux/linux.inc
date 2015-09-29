@@ -127,6 +127,10 @@ do_configure_prepend() {
     kernel_configure_variable QUOTA y
     kernel_configure_variable BT y
 
+    # add uinput for automated testing
+    kernel_configure_variable INPUT_MISC y
+    kernel_configure_variable INPUT_UINPUT y
+
     # Keep this the last line
     # Remove all modified configs and add the rest to .config
     sed -e "${CONF_SED_SCRIPT}" < '${WORKDIR}/defconfig' >> '${S}/.config'
