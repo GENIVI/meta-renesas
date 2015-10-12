@@ -7,7 +7,8 @@ LIC_FILES_CHKSUM_remove_rcar-gen2 = "\
 
 S = "${WORKDIR}/git"
 
-do_configure() {
+do_configure_prepend() {
+    cd ${S}
     ./autogen.sh --noconfigure
-    oe_runconf
+    cd ${B}
 }

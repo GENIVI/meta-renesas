@@ -8,9 +8,10 @@ LIC_FILES_CHKSUM_remove_rcar-gen2 = " file://omx/gstomx.h;beginline=1;endline=21
 LIC_FILES_CHKSUM_append_rcar-gen2 = " file://omx/gstomx.h;beginline=1;endline=22;md5=17e5f2943dace9e5cde4a8587a31e8f9"
 S = "${WORKDIR}/git"
 
-do_configure() {
+do_configure_prepend() {
+    cd ${S}
     ./autogen.sh --noconfigure
-    oe_runconf
+    cd ${B}
 }
 
 DEPENDS_append_rcar-gen2 = " omx-user-module mmngrbuf-user-module"
