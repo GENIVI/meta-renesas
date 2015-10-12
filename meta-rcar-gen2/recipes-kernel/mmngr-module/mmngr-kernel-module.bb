@@ -70,8 +70,10 @@ FILES_${PN}-dev = " \
     /usr/src/kernel/include/*.h \
 "
 
-RPROVIDES_${PN} += "mmngr-kernel-module"
+RPROVIDES_${PN} += "mmngr-kernel-module kernel-module-mmngr"
 INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
+
+ALLOW_EMPTY_kernel-module-mmngr = "1"
 
 do_configure[noexec] = "1"
 

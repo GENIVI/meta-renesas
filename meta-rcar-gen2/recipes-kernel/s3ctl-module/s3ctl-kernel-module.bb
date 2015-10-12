@@ -56,8 +56,10 @@ FILES_${PN}-dev = " \
     /usr/src/kernel/include/s3ctl.symvers \
 "
 
-RPROVIDES_${PN} += "s3ctl-kernel-module"
+RPROVIDES_${PN} += "s3ctl-kernel-module kernel-module-s3ctl"
 INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
+
+ALLOW_EMPTY_kernel-module-s3ctl = "1"
 
 do_configure[noexec] = "1"
 

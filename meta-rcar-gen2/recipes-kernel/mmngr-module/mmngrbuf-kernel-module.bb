@@ -55,8 +55,10 @@ FILES_${PN}-dev = " \
     /usr/src/kernel/include/*.h \
 "
 
-RPROVIDES_${PN} += "mmngrbuf-kernel-module"
+RPROVIDES_${PN} += "mmngrbuf-kernel-module kernel-module-mmngrbuf"
 INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
+
+ALLOW_EMPTY_kernel-module-mmngrbuf = "1"
 
 do_configure[noexec] = "1"
 

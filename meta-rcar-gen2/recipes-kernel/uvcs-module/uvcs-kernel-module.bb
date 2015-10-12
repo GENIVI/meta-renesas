@@ -63,8 +63,10 @@ FILES_${PN}-dev = " \
     /usr/src/kernel/include/uvcs.symvers \
 "
 
-RPROVIDES_${PN} += "uvcs-kernel-module"
+RPROVIDES_${PN} += "uvcs-kernel-module kernel-module-uvcs-cmn"
 INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
+
+ALLOW_EMPTY_kernel-module-uvcs-cmn = "1"
 
 python do_package_ipk_prepend () {
     d.setVar('ALLOW_EMPTY', '1')

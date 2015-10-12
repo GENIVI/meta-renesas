@@ -70,8 +70,10 @@ FILES_${PN}-dev = " \
     /usr/src/kernel/include/vspm.symvers \
 "
 
-RPROVIDES_${PN} += "vspm-kernel-module"
+RPROVIDES_${PN} += "vspm-kernel-module kernel-module-vspm"
 INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
+
+ALLOW_EMPTY_kernel-module-vspm = "1"
 
 do_configure[noexec] = "1"
 
