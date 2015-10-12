@@ -14,6 +14,7 @@ EXTRA_IMAGEDEPENDS += "u-boot"
 
 # multimedia acceleration uses Gst version 1.2.x, otherwise meta-ivi currently uses 1.4.x
 PREFERRED_VERSION_gstreamer1.0 = "${@base_conditional("USE_MULTIMEDIA", "1", "1.2.%", "1.4.%", d )}"
+PREFERRED_VERSION_gstreamer1.0-omx = "${@base_conditional("USE_MULTIMEDIA", "1", "1.0.%", "1.2.%", d )}"
 PREFERRED_VERSION_gstreamer1.0-plugins-bad = '${@base_conditional("USE_MULTIMEDIA", "1", "1.2.%", "1.4.%", d )}'
 PREFERRED_VERSION_gstreamer1.0-plugins-base = '${@base_conditional("USE_MULTIMEDIA", "1", "1.2.%", "1.4.%", d )}'
 PREFERRED_VERSION_gstreamer1.0-plugins-good = '${@base_conditional("USE_MULTIMEDIA", "1", "1.2.%", "1.4.%", d )}'
