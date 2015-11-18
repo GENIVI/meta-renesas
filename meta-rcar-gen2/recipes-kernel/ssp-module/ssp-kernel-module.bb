@@ -1,10 +1,11 @@
 require ../../include/rcar-gen2-modules-common.inc
 
-LICENSE = "GPLv2&MIT"
+LICENSE = "GPLv2 & MIT"
 LIC_FILES_CHKSUM = " \
     file://ssp/drv/GPL-COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
     file://ssp/drv/MIT-COPYING;md5=fea016ce2bdf2ec10080f69e9381d378 \
 "
+
 DEPENDS = "linux-renesas"
 PN = "ssp-kernel-module"
 PR = "r0"

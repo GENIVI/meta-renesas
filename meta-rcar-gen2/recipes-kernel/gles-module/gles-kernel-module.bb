@@ -1,9 +1,11 @@
 DESCRIPTION = "RGX/SGX kernel module"
-LICENSE = "GPLv2&MIT"
+
+LICENSE = "GPLv2 & MIT"
 LIC_FILES_CHKSUM = " \
     file://GPL-COPYING;md5=60422928ba677faaa13d6ab5f5baaa1e \
     file://MIT-COPYING;md5=8c2810fa6bfdc5ae5c15a0c1ade34054 \
 "
+
 DEPENDS = "linux-renesas"
 PN = "gles-kernel-module"
 PR = "r0"
@@ -42,7 +44,6 @@ INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
 
 do_patch[noexec] = "1"
 do_configure[noexec] = "1"
-do_populate_lic[noexec] = "1"
 
 export BUILDDIR = "${STAGING_INCDIR}/.."
 export LIBSHARED = "${STAGING_LIBDIR}"

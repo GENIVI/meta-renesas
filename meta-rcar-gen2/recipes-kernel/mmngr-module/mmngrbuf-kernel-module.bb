@@ -1,6 +1,6 @@
 require ../../include/rcar-gen2-modules-common.inc
 
-LICENSE = "GPLv2&MIT"
+LICENSE = "GPLv2 & MIT"
 DEPENDS = "linux-renesas"
 PN = "mmngrbuf-kernel-module"
 PR = "r0"
