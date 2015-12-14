@@ -1,5 +1,6 @@
 require recipes-kernel/linux-libc-headers/linux-libc-headers.inc
 
+EXTRA_OEMAKE = "-e MAKEFLAGS="
 KORG_ARCHIVE_COMPRESSION = "xz"
 COMPATIBLE_MACHINE = "(alt|gose|koelsch|lager|porter|silk|stout)"
 PV_append = "+git${SRCREV}"
