@@ -9,7 +9,7 @@ IMAGE_INSTALL_append_rcar-gen2 = " \
     bash \
 "
 
-IMAGE_INSTALL_append_rcar-gen2 = " \
+IMAGE_INSTALL_append_rcar-gen2 = ' ${@base_conditional("USE_MULTIMEDIA", "1", " \
     gstreamer1.0-plugins-base-videorate \
     gstreamer1.0-plugins-base-videotestsrc \
     gstreamer1.0-plugins-base-audiotestsrc \
@@ -22,7 +22,7 @@ IMAGE_INSTALL_append_rcar-gen2 = " \
     gstreamer1.0-plugins-bad-fbdevsink \
     gstreamer1.0-plugins-bad-faad \
     gstreamer1.0-plugins-bad-videoparsersbad \
-"
+    ", "", d)}'
 
 IMAGE_INSTALL_append_rcar-gen2 = '${@base_conditional("USE_GLES", "1", \
     "gles-kernel-module gles-user-module", "", d)}'
