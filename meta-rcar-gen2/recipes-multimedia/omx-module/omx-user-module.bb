@@ -1,6 +1,8 @@
 require ../../include/rcar-gen2-modules-common.inc
 require ../../include/omx-components-control.inc
 
+inherit remove-libtool
+
 LICENSE = "CLOSED"
 DEPENDS = " \
     mmngr-kernel-module mmngr-user-module \
