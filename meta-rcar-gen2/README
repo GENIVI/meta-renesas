@@ -28,7 +28,7 @@ This layer depends on:
 	branch: daisy
 
 	URI: git://git.openembedded.org/meta-openembedded
-	layers: meta-oe
+	layers: meta-oe, meta-multimedia
 	branch: daisy
 
 Build Instructions
