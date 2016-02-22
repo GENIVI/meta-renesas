@@ -8,6 +8,10 @@ LIC_FILES_CHKSUM_remove_rcar-gen2 = "\
     file://common/coverage/coverage-report.pl;beginline=2;endline=17;md5=a4e1830fce078028c8f0974161272607 \
 "
 
+SRC_URI += " \ 
+     file://0001-gl-do-not-check-for-GL-GLU-EGL-GLES2-libs-if-disable.patch \ 
+     file://configure-allow-to-disable-libssh2.patch" 
+
 S = "${WORKDIR}/git"
 
 do_configure_prepend() {
