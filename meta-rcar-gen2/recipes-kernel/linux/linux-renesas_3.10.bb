@@ -11,6 +11,7 @@ SRC_URI = " \
     file://0001-arm-alt-Add-vmalloc-384M-to-bootargs-of-DTS.patch \
     file://0001-arm-gose-Add-vmalloc-384M-to-bootargs-of-DTS.patch \
     file://user.cfg \
+    file://bootargs.cfg \
 "
 
 SRC_URI_append_lcb = " \
