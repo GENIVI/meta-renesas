@@ -1,0 +1,35 @@
+From 2a44bbb7e8604cfb3cb5b04be70e26ad2ecb739e Mon Sep 17 00:00:00 2001
+From: Stephen Lawrence <stephen.lawrence@renesas.com>
+Date: Thu, 10 Mar 2016 14:58:48 +0000
+Subject: [PATCH] dri2: Fix fstat, s_ISHCR implict declaration build error
+
+platform_wayland.c in Mesa 10.6.3 can fail to build with
+the following build errors:
+a/2_10.6.3-r0/mesa-10.6.3/src/egl/drivers/dri2/platform_wayland.c:847:4: error: implicit declaration of function 'fstat' [-Werror=implicit-function-declaration]
+|     if (fstat(fd, &render))
+|     ^
+/mesa/2_10.6.3-r0/mesa-10.6.3/src/egl/drivers/dri2/platform_wayland.c:850:4: error: implicit declaration of function 'S_ISCHR' [-Werror=implicit-function-declaration]
+|     if (!S_ISCHR(render.st_mode))
+|     ^
+| cc1: some warnings being treated as errors
+
+Fix the error by including sys/stat.h
+---
+ src/egl/drivers/dri2/platform_wayland.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/egl/drivers/dri2/platform_wayland.c b/src/egl/drivers/dri2/platform_wayland.c
+index 9914b68..131e0ec 100644
+--- a/src/egl/drivers/dri2/platform_wayland.c
++++ b/src/egl/drivers/dri2/platform_wayland.c
+@@ -37,6 +37,7 @@
+ #include <fcntl.h>
+ #include <xf86drm.h>
+ #include <sys/mman.h>
++#include <sys/stat.h>
+ 
+ #include "egl_dri2.h"
+ #include "egl_dri2_fallbacks.h"
+-- 
+1.9.1
+
