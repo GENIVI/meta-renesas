@@ -140,6 +140,9 @@ do_configure_prepend() {
     kernel_configure_variable INPUT_MISC y
     kernel_configure_variable INPUT_UINPUT y
 
+    # Enable HID_MULTITOUCH so touchscreens are detected
+    kernel_configure_variable HID_MULTITOUCH y
+
     # Keep this the last line
     # Remove all modified configs and add the rest to .config
     sed -e "${CONF_SED_SCRIPT}" < '${WORKDIR}/defconfig' >> '${B}/.config'
