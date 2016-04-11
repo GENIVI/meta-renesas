@@ -86,9 +86,13 @@ SRC_URI_append_lcb = " \
 SRC_URI_append_porter = " file://can.cfg"
 SRC_URI_append_stout = " file://stout.cfg"
 
+USE_FAYTECH_MONITOR ?= "0"
+
 SRC_URI_append = " \
     ${@' file://drm-rcar-du.cfg' \
     if '${USE_MULTIMEDIA}' == '0' or '${USE_GLES_WAYLAND}' == '0' else ''} \
+    ${@' file://0001-faytech-fix-porter.patch' \
+    if '${USE_FAYTECH_MONITOR}' == '1' else ''} \
 "
 
 PATCHTOOL_rcar-gen2 = "git"
