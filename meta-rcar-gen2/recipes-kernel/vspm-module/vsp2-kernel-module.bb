@@ -55,7 +55,7 @@ FILES_${PN} = " \
 FILES_${PN}-dev = " \
     /usr/src/kernel/include/vsp2.symvers \
 "
-RPROVIDES_${PN} += "vsp2-kernel-module"
+RPROVIDES_${PN} += "vsp2-kernel-module kernel-module-vsp2"
 INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
 
 python do_package_ipk_prepend () {
