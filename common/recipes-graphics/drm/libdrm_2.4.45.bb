@@ -1,4 +1,4 @@
-require recipes-graphics/drm/libdrm.inc
+require libdrm.inc
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
