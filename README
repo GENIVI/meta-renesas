@@ -4,7 +4,7 @@ This layer provides support for Renesas Electronics's platforms for use with
 OpenEmbedded and/or Yocto.
 
 Layer maintainers: Takeshi Saito <takeshi.saito.xv@renesas.com>
-				   Stephen Lawrence <stephen.lawrence@renesas.com> (Genivi branches)
+                   Stephen Lawrence <stephen.lawrence@renesas.com> (Genivi branches)
 
 Supported Boards/Machines
 =========================
@@ -14,8 +14,10 @@ SoCs that Renesas build. Layer and board that supports following:
 
 	* meta-rcar-gen2
 	  - Renesas Electronics Corporation. Alt (R8A7794)
+	  - Renesas Electronics Corporation. Silk (R8A7794)
 	  - Renesas Electronics Corporation. Gose (R8A7793)
 	  - Renesas Electronics Corporation. Koelsch (R8A7791)
+	  - Renesas Electronics Corporation. Porter (R8A7791)
 	  - Renesas Electronics Corporation. Lager (R8A7790)
 	* meta-rmobile
 	  - Atmark Techno, Inc. Armadillo-800 EVA (R8A7740)
@@ -31,7 +33,7 @@ The meta-renesas layer provides original BSP image. The following
 Genivi
 ======
 
-For details about using this BSP with Genivi platforms, including the Genivi Demo Platform
+For details about using this BSP with Genivi platforms, including the Genivi Development Platform
 and Genivi Baselines, please see the Renesas R-Car links within the Genivi wiki [1]
 
-[1] http://wiki.projects.genivi.org/index.php/Meta-ivi
+[1] https://at.projects.genivi.org/wiki/display/PROJ/Meta+ivi+BSPs+for+Specific+Hardware

@@ -1,13 +1,15 @@
 meta-rcar-gen2
 ===========
 
-This layer provides that evaluation board is mounted ARM SoCs of Renesas
-Electronics, called the R-Car Generation 2. Currently, this supports
-board and the SoCs of the following:
+This layer provides support for Evaluation and Low Cost boards mounted 
+with Renesas Electronics R-Car Generation 2 SoCs.
+Currently the following boards and SoCs are supported:
   - Board: lager   / SoC: R8A7790 (R-Car H2)
   - Board: koelsch / SoC: R8A7791 (R-Car M2-W)
+  - Board: porter  / SoC: R8A7791 (R-Car M2-W)
   - Board: gose    / SoC: R8A7793 (R-Car M2-N)
   - Board: alt     / SoC: R8A7794 (R-Car E2)
+  - Board: silk    / SoC: R8A7794 (R-Car E2)
 
 Patches
 =======
@@ -21,15 +23,11 @@ This layer depends on:
 
 	URI: git://git.yoctoproject.org/poky
 	layers: meta, meta-yocto, meta-yocto-bsp
-	branch: daisy
-
-	URI: git://git.yoctoproject.org/meta-renesas
-	layers: renesas, meta-rcar-gen2
-	branch: daisy
+	branch: jethro
 
 	URI: git://git.openembedded.org/meta-openembedded
 	layers: meta-oe, meta-multimedia
-	branch: daisy
+	branch: jethro
 
 Build Instructions
 ==================
