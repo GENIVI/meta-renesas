@@ -7,6 +7,8 @@ SRC_URI += "file://0001-dri2-Fix-fstat-s_ISHCR-implict-declaration-build-err.pat
 
 # Disable the gbm modules of mesa
 EXTRA_OECONF_rcar-gen2 := "${@'${EXTRA_OECONF}'.replace('--enable-gbm', '--disable-gbm')}"
+PACKAGECONFIG[gbm] = "--disable-gbm"
+
 # Remove the gbm and egl packages. These are provided in other recipes.
 PACKAGES_remove_rcar-gen2 = "libgbm-dev libgbm libegl-mesa-dev libegl-mesa libegl-dev libegl libgles2-mesa libgles2-mesa-dev"
 
