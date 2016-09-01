@@ -1,0 +1,160 @@
+Index: gtk/configure.ac
+===================================================================
+--- gtk.orig/configure.ac	2016-08-25 14:44:26.726065608 +0100
++++ gtk/configure.ac	2016-08-25 14:45:47.170067118 +0100
+@@ -791,6 +791,9 @@
+ AC_CHECK_FUNCS(bind_textdomain_codeset)
+ LIBS=$gtk_save_LIBS
+ 
++AC_CHECK_HEADERS(linux/memfd.h,
++                 AC_DEFINE(HAVE_LINUX_MEMFD_H, 1,
++                           [Define to 1 if memfd.h is available]))
+ AC_CHECK_HEADERS(sys/mman.h,
+                  AC_DEFINE(HAVE_SYS_MMAN_H, 1,
+                            [Define to 1 if mman.h is available]))
+Index: gtk/gdk/wayland/gdkdisplay-wayland.c
+===================================================================
+--- gtk.orig/gdk/wayland/gdkdisplay-wayland.c	2016-08-25 14:44:26.762065609 +0100
++++ gtk/gdk/wayland/gdkdisplay-wayland.c	2016-08-26 08:24:24.039259559 +0100
+@@ -22,7 +22,11 @@
+ #include <errno.h>
+ #include <unistd.h>
+ #include <fcntl.h>
++
++#ifdef HAVE_LINUX_MEMFD_H
+ #include <linux/memfd.h>
++#endif
++
+ #include <sys/mman.h>
+ #include <sys/syscall.h>
+ 
+@@ -960,15 +964,101 @@
+   gboolean busy;
+ } GdkWaylandCairoSurfaceData;
+ 
++static int
++open_shared_memory (void)
++{
++  static gboolean force_shm_open = FALSE;
++  int ret = -1;
++
++#if !defined (__NR_memfd_create)
++  force_shm_open = TRUE;
++#endif
++
++  do
++    {
++#if defined (__NR_memfd_create)
++      if (!force_shm_open)
++        {
++          ret = syscall (__NR_memfd_create, "gdk-wayland", MFD_CLOEXEC);
++
++          /* fall back to shm_open until debian stops shipping 3.16 kernel
++           * See bug 766341
++           */
++          if (ret < 0 && errno == ENOSYS)
++            force_shm_open = TRUE;
++        }
++#endif
++
++      if (force_shm_open)
++        {
++          char name[NAME_MAX - 1] = "";
++
++          sprintf (name, "/gdk-wayland-%x", g_random_int ());
++
++          ret = shm_open (name, O_CREAT | O_EXCL | O_RDWR | O_CLOEXEC, 0600);
++
++          if (ret >= 0)
++            shm_unlink (name);
++          else if (errno == EEXIST)
++            continue;
++        }
++    }
++  while (ret < 0 && errno == EINTR);
++
++  if (ret < 0)
++    g_critical (G_STRLOC ": creating shared memory file (using %s) failed: %m",
++                force_shm_open? "shm_open" : "memfd_create");
++
++  return ret;
++}
++
+ static void
+ buffer_release_callback (void             *_data,
+                          struct wl_buffer *wl_buffer)
+ {
+-  cairo_surface_t *surface = _data;
+-  GdkWaylandCairoSurfaceData *data = cairo_surface_get_user_data (surface, &gdk_wayland_cairo_key);
++  static gboolean force_shm_open = FALSE;
++  int ret = -1;
++
++#if !defined (__NR_memfd_create)
++  force_shm_open = TRUE;
++#endif
++
++  do
++    {
++#if defined (__NR_memfd_create)
++      if (!force_shm_open)
++        {
++          ret = syscall (__NR_memfd_create, "gdk-wayland", MFD_CLOEXEC);
++
++          /* fall back to shm_open until debian stops shipping 3.16 kernel
++           * See bug 766341
++           */
++          if (ret < 0 && errno == ENOSYS)
++            force_shm_open = TRUE;
++        }
++#endif
++
++      if (force_shm_open)
++        {
++          char name[NAME_MAX - 1] = "";
++
++          sprintf (name, "/gdk-wayland-%x", g_random_int ());
+ 
+-  data->busy = FALSE;
+-  cairo_surface_destroy (surface);
++          ret = shm_open (name, O_CREAT | O_EXCL | O_RDWR | O_CLOEXEC, 0600);
++
++          if (ret >= 0)
++            shm_unlink (name);
++          else if (errno == EEXIST)
++            continue;
++        }
++    }
++  while (ret < 0 && errno == EINTR);
++
++  if (ret < 0)
++    g_critical (G_STRLOC ": creating shared memory file (using %s) failed: %m",
++                force_shm_open? "shm_open" : "memfd_create");
++
++  return ret;
+ }
+ 
+ static const struct wl_buffer_listener buffer_listener = {
+@@ -982,19 +1072,14 @@
+                  void          **data_out)
+ {
+   struct wl_shm_pool *pool;
+-  int ret, fd;
++  int  fd;
+   void *data;
+ 
+-  ret = syscall (__NR_memfd_create, "gdk-wayland", MFD_CLOEXEC);
++  fd = open_shared_memory ();
+ 
+-  if (ret < 0)
+-    {
+-      g_critical (G_STRLOC ": creating shared memory file failed: %s",
+-                  g_strerror (-ret));
+-      return NULL;
+-    }
++  if (fd < 0)
+ 
+-  fd = ret;
++    return NULL;
+ 
+   if (ftruncate (fd, size) < 0)
+     {
