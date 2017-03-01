@@ -12,3 +12,5 @@ do_configure_prepend() {
     ./autogen.sh --noconfigure
     cd ${B}
 }
+
+RDEPENDS_${PN} += "libgudev"

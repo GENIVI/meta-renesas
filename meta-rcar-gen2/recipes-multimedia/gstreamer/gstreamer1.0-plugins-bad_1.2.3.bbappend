@@ -24,7 +24,7 @@ do_configure_prepend() {
 PACKAGECONFIG_remove_rcar-gen2 = "${@'orc' if '1' in '${USE_GLES_WAYLAND}' else ''}"
 PACKAGECONFIG_append_rcar-gen2 = " faad ${@base_contains('USE_GLES_WAYLAND', '1', 'wayland', '', d)}"
 DEPENDS += "wayland-kms"
-RDEPENDS_${PN} = "libwayland-egl"
+RDEPENDS_${PN} += "libwayland-egl libgudev libegl libgbm"
 
 # for lcb
 DEPENDS_append_lcb = " ${@base_conditional('USE_MULTIMEDIA', '1', 'faac', '', d)}"

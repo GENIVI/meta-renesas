@@ -17,6 +17,7 @@ SRC_URI = "git://github.com/renesas-devel/libshvio.git;branch=vio6"
 S = "${WORKDIR}/git/"
 
 DEPENDS = "libuiomux libshmeram"
+RDEPENDS_${PN} = "ncurses-libtinfo"
 EXTRA_OECONF = "--enable-meram"
 
 do_configure() {
